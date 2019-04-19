@@ -1,0 +1,450 @@
+@import url(https://fonts.googleapis.com/css?family=Raleway:400,300,500,600,700,100,200,800,900);
+@import url(//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css);
+
+.Score {
+    display: table;
+    font: 500 100px/2 "Raleway", sans-serif;
+    font-size: 20px;
+    color: #fff;
+    position: relative;
+    width: 270px;
+    height: 200px;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+.Score .fa-arrow-up {
+    font-size: 50%;
+    color: #27AE60;
+    position: relative;
+    top: -5px;
+}
+
+
+.Score-added,
+.Score-multiplier {
+    -webkit-animation: scoreOverlayFromBottom 2s ease-in-out 1;
+    -moz-animation: scoreOverlayFromBottom 2s ease-in-out 1;
+    animation: scoreOverlayFromBottom 2s ease-in-out 1;
+    position: absolute;
+    white-space: nowrap;
+    text-align: center;
+    width: 400px;
+    left: 580px;
+    line-height: 200px;
+    opacity: 0;
+}
+
+.Score-added i,
+.Score-multiplier i {
+    color: orange;
+    font-size: 90%;
+}
+
+.Score-multiplier {
+    -webkit-animation: scoreOverlayFromBottomMultiplier 1s ease-in-out 1;
+    -moz-animation: scoreOverlayFromBottomMultiplier 1s ease-in-out 1;
+    animation: scoreOverlayFromBottomMultiplier 1s ease-in-out 1;
+    animation-delay: 1s;
+    -webkit-animation-delay: 1s;
+    width: 400px;
+    left: 500px;
+}
+
+.Score-multiplier i {
+    color: red;
+}
+
+@-webkit-keyframes scoreOverlayFromBottom {
+    0% {
+        font-size: 50px;
+        line-height: 200px;
+        top: 200px;
+        opacity: 0;
+    }
+
+    15% {
+        opacity: 1;
+        font-size: 130px;
+        line-height: 200px;
+        top: 100px;
+        left: -80px;
+    }
+
+    20% {
+        font-size: 100px;
+    }
+
+    40% {
+        left: -80px;
+    }
+
+    60% {
+        opacity: 1;
+        font-size: 100px;
+        line-height: 200px;
+        top: 100px;
+        left: 10px;
+    }
+
+    90% {
+        opacity: 1;
+        font-size: 100px;
+        line-height: 200px;
+        top: 100px;
+        left: 10px;
+    }
+
+    100% {
+        opacity: 0;
+        font-size: 0px;
+        line-height: 200px;
+        top: -50px;
+        left: -80px;
+    }
+}
+
+@-moz-keyframes scoreOverlayFromBottom {
+    0% {
+        font-size: 50px;
+        line-height: 200px;
+        top: 200px;
+        opacity: 0;
+    }
+
+    15% {
+        opacity: 1;
+        font-size: 130px;
+        line-height: 200px;
+        top: 100px;
+        left: -80px;
+    }
+
+    20% {
+        font-size: 100px;
+    }
+
+    40% {
+        left: -80px;
+    }
+
+    60% {
+        opacity: 1;
+        font-size: 100px;
+        line-height: 200px;
+        top: 100px;
+        left: 10px;
+    }
+
+    90% {
+        opacity: 1;
+        font-size: 100px;
+        line-height: 200px;
+        top: 100px;
+        left: 10px;
+    }
+
+    100% {
+        opacity: 0;
+        font-size: 0px;
+        line-height: 200px;
+        top: -50px;
+        left: -80px;
+    }
+}
+
+@keyframes scoreOverlayFromBottom {
+    0% {
+        font-size: 50px;
+        line-height: 200px;
+        top: 200px;
+        opacity: 0;
+    }
+
+    15% {
+        opacity: 1;
+        font-size: 130px;
+        line-height: 200px;
+        top: 100px;
+        left: -80px;
+    }
+
+    20% {
+        font-size: 100px;
+    }
+
+    40% {
+        left: -80px;
+    }
+
+    60% {
+        opacity: 1;
+        font-size: 100px;
+        line-height: 200px;
+        top: 100px;
+        left: 10px;
+    }
+
+    90% {
+        opacity: 1;
+        font-size: 100px;
+        line-height: 200px;
+        top: 100px;
+        left: 10px;
+    }
+
+    100% {
+        opacity: 0;
+        font-size: 0px;
+        line-height: 200px;
+        top: -50px;
+        left: -80px;
+    }
+}
+
+@-webkit-keyframes scoreOverlayFromBottomMultiplier {
+    0% {
+        font-size: 50px;
+        line-height: 200px;
+        top: 200px;
+        opacity: 0;
+    }
+
+    30% {
+        opacity: 1;
+        font-size: 130px;
+        line-height: 200px;
+        top: 100px;
+    }
+
+    40% {
+        font-size: 100px;
+    }
+
+    60% {
+        opacity: 1;
+        font-size: 100px;
+        line-height: 200px;
+        top: 100px;
+        left: -200px;
+    }
+
+    80% {
+        opacity: 1;
+        font-size: 100px;
+        line-height: 200px;
+        top: 100px;
+        left: -200px;
+    }
+
+    100% {
+        opacity: 0;
+        font-size: 0px;
+        line-height: 200px;
+        top: -50px;
+        left: -50px;
+    }
+}
+
+@-moz-keyframes scoreOverlayFromBottomMultiplier {
+    0% {
+        font-size: 50px;
+        line-height: 200px;
+        top: 200px;
+        opacity: 0;
+    }
+
+    30% {
+        opacity: 1;
+        font-size: 130px;
+        line-height: 200px;
+        top: 100px;
+    }
+
+    40% {
+        font-size: 100px;
+    }
+
+    60% {
+        opacity: 1;
+        font-size: 100px;
+        line-height: 200px;
+        top: 100px;
+        left: -200px;
+    }
+
+    80% {
+        opacity: 1;
+        font-size: 100px;
+        line-height: 200px;
+        top: 100px;
+        left: -200px;
+    }
+
+    100% {
+        opacity: 0;
+        font-size: 0px;
+        line-height: 200px;
+        top: -50px;
+        left: -50px;
+    }
+}
+
+@keyframes scoreOverlayFromBottomMultiplier {
+    0% {
+        font-size: 50px;
+        line-height: 200px;
+        top: 200px;
+        opacity: 0;
+    }
+
+    30% {
+        opacity: 1;
+        font-size: 130px;
+        line-height: 200px;
+        top: 100px;
+    }
+
+    40% {
+        font-size: 100px;
+    }
+
+    60% {
+        opacity: 1;
+        font-size: 100px;
+        line-height: 200px;
+        top: 100px;
+        left: -200px;
+    }
+
+    80% {
+        opacity: 1;
+        font-size: 100px;
+        line-height: 200px;
+        top: 100px;
+        left: -200px;
+    }
+
+    100% {
+        opacity: 0;
+        font-size: 0px;
+        line-height: 200px;
+        top: -50px;
+        left: -50px;
+    }
+}
+
+@-webkit-keyframes scoreOverlay {
+    0% {
+        font-size: 50px;
+        line-height: 200px;
+        top: 0px;
+        opacity: 0;
+    }
+
+    20% {
+        opacity: 1;
+        font-size: 100px;
+        line-height: 200px;
+        top: 100px;
+    }
+
+    90% {
+        opacity: 1;
+        font-size: 100px;
+        line-height: 200px;
+        top: 100px;
+    }
+
+    100% {
+        opacity: 0;
+        font-size: 0px;
+        line-height: 200px;
+        top: -400px;
+    }
+}
+
+@-moz-keyframes scoreOverlay {
+    0% {
+        font-size: 50px;
+        line-height: 200px;
+        top: 0px;
+        opacity: 0;
+    }
+
+    20% {
+        opacity: 1;
+        font-size: 100px;
+        line-height: 200px;
+        top: 100px;
+    }
+
+    90% {
+        opacity: 1;
+        font-size: 100px;
+        line-height: 200px;
+        top: 100px;
+    }
+
+    100% {
+        opacity: 0;
+        font-size: 0px;
+        line-height: 200px;
+        top: -400px;
+    }
+}
+
+@keyframes scoreOverlay {
+    0% {
+        font-size: 50px;
+        line-height: 200px;
+        top: 0px;
+        opacity: 0;
+    }
+
+    20% {
+        opacity: 1;
+        font-size: 100px;
+        line-height: 200px;
+        top: 100px;
+    }
+
+    90% {
+        opacity: 1;
+        font-size: 100px;
+        line-height: 200px;
+        top: 100px;
+    }
+
+    100% {
+        opacity: 0;
+        font-size: 0px;
+        line-height: 200px;
+        top: -400px;
+    }
+}
+
+.ResetScore {
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    bottom: auto;
+    left: auto;
+    display: block;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 250px;
+    text-align: center;
+    margin-top: -20px;
+    font: 700 14px/40px "Railway", sans-serif;
+    text-transform: uppercase;
+    color: #fff;
+    border: 2px solid #3e5871;
+    -webkit-transition: background 0.2s;
+    -moz-transition: background 0.2s;
+    transition: background 0.2s;
+}
+
+.ResetScore:hover {
+    background: #3e5871;
+}

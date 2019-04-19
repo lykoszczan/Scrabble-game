@@ -1,0 +1,374 @@
+<html lang="pl">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scrabble by lykoszczan</title>
+  <link rel="stylesheet" href="style/style.css">
+  <link rel="stylesheet" href="style/score.css">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link href="https://fonts.googleapis.com/css?family=Cardo:400,700|Oswald" rel="stylesheet">
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+  <link rel="icon" href="/public/favicon.ico">
+</head>
+
+<body>
+  <div class="sidenav">
+
+    <!-- <span>Wynik</span> -->
+
+    <div class="Score">
+      <div class="user-info">
+        <img src="style/img/user.svg" alt="" />
+        <span>Wynik</span>
+        <i class="fa fa-arrow-up"></i><span class="timer" data-from="0" data-to="0" data-speed="500"
+          data-refresh-interval="30" id="score">0</span>
+      </div>
+    </div>
+
+    <div class="sidebar-letters">
+      <table>
+        <tr id="letters">
+        </tr>
+      </table>
+      <!-- <div class="letter wood">A<div class="letterValue">1</div> -->
+    </div>
+  </div>
+
+  </div>
+
+  <div class="board">
+    <table class="table-board">
+      <tr id="columns">
+        <th class="column"></th>
+        <th class="column">1</th>
+        <th class="column">2</th>
+        <th class="column">3</th>
+        <th class="column">4</th>
+        <th class="column">5</th>
+        <th class="column">6</th>
+        <th class="column">7</th>
+        <th class="column">8</th>
+        <th class="column">9</th>
+        <th class="column">10</th>
+        <th class="column">11</th>
+        <th class="column">12</th>
+        <th class="column">13</th>
+        <th class="column">14</th>
+        <th class="column">15</th>
+        <th class="column"></th>
+      </tr>
+      <tr id="A">
+        <th class="row">A</th>
+        <th class="pole" id="A1"></th>
+        <th class="pole" id="A2"></th>
+        <th class="pole" id="A3"></th>
+        <th class="pole" id="A4"></th>
+        <th class="pole" id="A5"></th>
+        <th class="pole" id="A6"></th>
+        <th class="pole" id="A7"></th>
+        <th class="pole" id="A8"></th>
+        <th class="pole" id="A9"></th>
+        <th class="pole" id="A10"></th>
+        <th class="pole" id="A11"></th>
+        <th class="pole" id="A12"></th>
+        <th class="pole" id="A13"></th>
+        <th class="pole" id="A14"></th>
+        <th class="pole" id="A15"></th>
+        <th class="column"></th>
+      </tr>
+      <tr id="B">
+        <th class="row">B</th>
+        <th class="pole" id="B1"></th>
+        <th class="pole" id="B2"></th>
+        <th class="pole" id="B3"></th>
+        <th class="pole" id="B4"></th>
+        <th class="pole" id="B5"></th>
+        <th class="pole" id="B6"></th>
+        <th class="pole" id="B7"></th>
+        <th class="pole" id="B8"></th>
+        <th class="pole" id="B9"></th>
+        <th class="pole" id="B10"></th>
+        <th class="pole" id="B11"></th>
+        <th class="pole" id="B12"></th>
+        <th class="pole" id="B13"></th>
+        <th class="pole" id="B14"></th>
+        <th class="pole" id="B15"></th>
+        <th class="column"></th>
+      </tr>
+      <tr id="C">
+        <th class="row">C</th>
+        <th class="pole" id="C1"></th>
+        <th class="pole" id="C2"></th>
+        <th class="pole" id="C3"></th>
+        <th class="pole" id="C4"></th>
+        <th class="pole" id="C5"></th>
+        <th class="pole" id="C6"></th>
+        <th class="pole" id="C7"></th>
+        <th class="pole" id="C8"></th>
+        <th class="pole" id="C9"></th>
+        <th class="pole" id="C10"></th>
+        <th class="pole" id="C11"></th>
+        <th class="pole" id="C12"></th>
+        <th class="pole" id="C13"></th>
+        <th class="pole" id="C14"></th>
+        <th class="pole" id="C15"></th>
+        <th class="column"></th>
+      </tr>
+      <tr id="D">
+        <th class="row">D</th>
+        <th class="pole" id="D1"></th>
+        <th class="pole" id="D2"></th>
+        <th class="pole" id="D3"></th>
+        <th class="pole" id="D4"></th>
+        <th class="pole" id="D5"></th>
+        <th class="pole" id="D6"></th>
+        <th class="pole" id="D7"></th>
+        <th class="pole" id="D8"></th>
+        <th class="pole" id="D9"></th>
+        <th class="pole" id="D10"></th>
+        <th class="pole" id="D11"></th>
+        <th class="pole" id="D12"></th>
+        <th class="pole" id="D13"></th>
+        <th class="pole" id="D14"></th>
+        <th class="pole" id="D15"></th>
+        <th class="column"></th>
+      </tr>
+      <tr id="E">
+        <th class="row">E</th>
+        <th class="pole" id="E1"></th>
+        <th class="pole" id="E2"></th>
+        <th class="pole" id="E3"></th>
+        <th class="pole" id="E4"></th>
+        <th class="pole" id="E5"></th>
+        <th class="pole" id="E6"></th>
+        <th class="pole" id="E7"></th>
+        <th class="pole" id="E8"></th>
+        <th class="pole" id="E9"></th>
+        <th class="pole" id="E10"></th>
+        <th class="pole" id="E11"></th>
+        <th class="pole" id="E12"></th>
+        <th class="pole" id="E13"></th>
+        <th class="pole" id="E14"></th>
+        <th class="pole" id="E15"></th>
+        <th class="column"></th>
+      </tr>
+      <tr id="F">
+        <th class="row">F</th>
+        <th class="pole" id="F1"></th>
+        <th class="pole" id="F2"></th>
+        <th class="pole" id="F3"></th>
+        <th class="pole" id="F4"></th>
+        <th class="pole" id="F5"></th>
+        <th class="pole" id="F6"></th>
+        <th class="pole" id="F7"></th>
+        <th class="pole" id="F8"></th>
+        <th class="pole" id="F9"></th>
+        <th class="pole" id="F10"></th>
+        <th class="pole" id="F11"></th>
+        <th class="pole" id="F12"></th>
+        <th class="pole" id="F13"></th>
+        <th class="pole" id="F14"></th>
+        <th class="pole" id="F15"></th>
+        <th class="column"></th>
+      </tr>
+      <tr id="G">
+        <th class="row">G</th>
+        <th class="pole" id="G1"></th>
+        <th class="pole" id="G2"></th>
+        <th class="pole" id="G3"></th>
+        <th class="pole" id="G4"></th>
+        <th class="pole" id="G5"></th>
+        <th class="pole" id="G6"></th>
+        <th class="pole" id="G7"></th>
+        <th class="pole" id="G8"></th>
+        <th class="pole" id="G9"></th>
+        <th class="pole" id="G10"></th>
+        <th class="pole" id="G11"></th>
+        <th class="pole" id="G12"></th>
+        <th class="pole" id="G13"></th>
+        <th class="pole" id="G14"></th>
+        <th class="pole" id="G15"></th>
+        <th class="column"></th>
+      </tr>
+      <tr id="H">
+        <th class="row">H</th>
+        <th class="pole" id="H1"></th>
+        <th class="pole" id="H2"></th>
+        <th class="pole" id="H3"></th>
+        <th class="pole" id="H4"></th>
+        <th class="pole" id="H5"></th>
+        <th class="pole" id="H6"></th>
+        <th class="pole" id="H7"></th>
+        <th class="pole" id="H8"></th>
+        <th class="pole" id="H9"></th>
+        <th class="pole" id="H10"></th>
+        <th class="pole" id="H11"></th>
+        <th class="pole" id="H12"></th>
+        <th class="pole" id="H13"></th>
+        <th class="pole" id="H14"></th>
+        <th class="pole" id="H15"></th>
+        <th class="column"></th>
+      </tr>
+      <tr id="I">
+        <th class="row">I</th>
+        <th class="pole" id="I1"></th>
+        <th class="pole" id="I2"></th>
+        <th class="pole" id="I3"></th>
+        <th class="pole" id="I4"></th>
+        <th class="pole" id="I5"></th>
+        <th class="pole" id="I6"></th>
+        <th class="pole" id="I7"></th>
+        <th class="pole" id="I8"></th>
+        <th class="pole" id="I9"></th>
+        <th class="pole" id="I10"></th>
+        <th class="pole" id="I11"></th>
+        <th class="pole" id="I12"></th>
+        <th class="pole" id="I13"></th>
+        <th class="pole" id="I14"></th>
+        <th class="pole" id="I15"></th>
+        <th class="column"></th>
+      </tr>
+      <tr id="J">
+        <th class="row">J</th>
+        <th class="pole" id="J1"></th>
+        <th class="pole" id="J2"></th>
+        <th class="pole" id="J3"></th>
+        <th class="pole" id="J4"></th>
+        <th class="pole" id="J5"></th>
+        <th class="pole" id="J6"></th>
+        <th class="pole" id="J7"></th>
+        <th class="pole" id="J8"></th>
+        <th class="pole" id="J9"></th>
+        <th class="pole" id="J10"></th>
+        <th class="pole" id="J11"></th>
+        <th class="pole" id="J12"></th>
+        <th class="pole" id="J13"></th>
+        <th class="pole" id="J14"></th>
+        <th class="pole" id="J15"></th>
+        <th class="column"></th>
+      </tr>
+      <tr id="K">
+        <th class="row">K</th>
+        <th class="pole" id="K1"></th>
+        <th class="pole" id="K2"></th>
+        <th class="pole" id="K3"></th>
+        <th class="pole" id="K4"></th>
+        <th class="pole" id="K5"></th>
+        <th class="pole" id="K6"></th>
+        <th class="pole" id="K7"></th>
+        <th class="pole" id="K8"></th>
+        <th class="pole" id="K9"></th>
+        <th class="pole" id="K10"></th>
+        <th class="pole" id="K11"></th>
+        <th class="pole" id="K12"></th>
+        <th class="pole" id="K13"></th>
+        <th class="pole" id="K14"></th>
+        <th class="pole" id="K15"></th>
+        <th class="column"></th>
+      </tr>
+      <tr id="L">
+        <th class="row">L</th>
+        <th class="pole" id="L1"></th>
+        <th class="pole" id="L2"></th>
+        <th class="pole" id="L3"></th>
+        <th class="pole" id="L4"></th>
+        <th class="pole" id="L5"></th>
+        <th class="pole" id="L6"></th>
+        <th class="pole" id="L7"></th>
+        <th class="pole" id="L8"></th>
+        <th class="pole" id="L9"></th>
+        <th class="pole" id="L10"></th>
+        <th class="pole" id="L11"></th>
+        <th class="pole" id="L12"></th>
+        <th class="pole" id="L13"></th>
+        <th class="pole" id="L14"></th>
+        <th class="pole" id="L15"></th>
+        <th class="column"></th>
+      </tr>
+      <tr id="M">
+        <th class="row">M</th>
+        <th class="pole" id="M1"></th>
+        <th class="pole" id="M2"></th>
+        <th class="pole" id="M3"></th>
+        <th class="pole" id="M4"></th>
+        <th class="pole" id="M5"></th>
+        <th class="pole" id="M6"></th>
+        <th class="pole" id="M7"></th>
+        <th class="pole" id="M8"></th>
+        <th class="pole" id="M9"></th>
+        <th class="pole" id="M10"></th>
+        <th class="pole" id="M11"></th>
+        <th class="pole" id="M12"></th>
+        <th class="pole" id="M13"></th>
+        <th class="pole" id="M14"></th>
+        <th class="pole" id="M15"></th>
+        <th class="column"></th>
+      </tr>
+      <tr id="N">
+        <th class="row">N</th>
+        <th class="pole" id="N1"></th>
+        <th class="pole" id="N2"></th>
+        <th class="pole" id="N3"></th>
+        <th class="pole" id="N4"></th>
+        <th class="pole" id="N5"></th>
+        <th class="pole" id="N6"></th>
+        <th class="pole" id="N7"></th>
+        <th class="pole" id="N8"></th>
+        <th class="pole" id="N9"></th>
+        <th class="pole" id="N10"></th>
+        <th class="pole" id="N11"></th>
+        <th class="pole" id="N12"></th>
+        <th class="pole" id="N13"></th>
+        <th class="pole" id="N14"></th>
+        <th class="pole" id="N15"></th>
+        <th class="column"></th>
+      </tr>
+      <tr id="O">
+        <th class="row">O</th>
+        <th class="pole" id="O1"></th>
+        <th class="pole" id="O2"></th>
+        <th class="pole" id="O3"></th>
+        <th class="pole" id="O4"></th>
+        <th class="pole" id="O5"></th>
+        <th class="pole" id="O6"></th>
+        <th class="pole" id="O7"></th>
+        <th class="pole" id="O8"></th>
+        <th class="pole" id="O9"></th>
+        <th class="pole" id="O10"></th>
+        <th class="pole" id="O11"></th>
+        <th class="pole" id="O12"></th>
+        <th class="pole" id="O13"></th>
+        <th class="pole" id="O14"></th>
+        <th class="pole" id="O15"></th>
+        <th class="column"></th>
+      </tr>
+      <tr id="columns">
+        <th class="column"></th>
+        <th class="column"></th>
+        <th class="column"></th>
+        <th class="column"></th>
+        <th class="column"></th>
+        <th class="column"></th>
+        <th class="column"></th>
+        <th class="column"></th>
+        <th class="column"></th>
+        <th class="column"></th>
+        <th class="column"></th>
+        <th class="column"></th>
+        <th class="column"></th>
+        <th class="column"></th>
+        <th class="column"></th>
+        <th class="column"></th>
+      </tr>
+    </table>
+  </div>
+
+  <script type="text/javascript" src="script/score.js"></script>
+  <script type="text/javascript" src="script/keyDown.js"></script>
+  <script type="text/javascript" src="script/logic.js"></script>
+  <script type="text/javascript" src="script/rest.js"></script>
+  <script type="text/javascript" src="script/test.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,223 @@
+.table-board {
+  margin-left: 25%;
+  margin-right: 10%;
+  border: 5px solid #116466;
+  background-color: #116466;
+  border-collapse: collapse;
+  box-shadow: 10px 10px 8px 10px #888888;
+}
+
+th {
+  font-family: 'Oswald', sans-serif;
+  text-align: center;
+  font-size: 10px;
+}
+
+.column {
+  background-color: #116466;
+  font-weight: normal;
+  color: white;
+  text-align: center;
+}
+
+.row {
+  font-weight: normal;
+  color: white;
+  text-align: left;
+}
+
+.sideBar-pole {
+  font-size: 12px;
+  width: 60px;
+  height: 58px;
+  background-color: rgb(49, 53, 61);
+  color: black;
+  transition: .5s ease;
+  backface-visibility: hidden;
+}
+
+.sideBar-pole:hover {
+  background-color: white;
+  opacity: 0.5;
+  cursor: default;
+}
+
+
+.pole {
+  font-size: 12px;
+  width: 60px;
+  height: 58px;
+  border: 2px solid white;
+  border-radius: 2px;
+  /* background-color: #64BC53; */
+  background-color: #116466;
+  color: black;
+  transition: .5s ease;
+  backface-visibility: hidden;
+}
+
+.pole:hover {
+  background-color: white;
+  opacity: 0.5;
+  cursor: default;
+}
+
+.letter {
+  position: relative;
+  margin: 0 auto;
+  border-radius: 2px;
+  width: 100%;
+  height: 100%;
+  font-size: 26px;
+}
+
+.letterValue {
+  position: absolute;
+  box-sizing: content-box;
+  width: 20%;
+  margin-left: 70%;
+  margin-top: -10%;
+  font-size: 12px;
+}
+
+.wood {
+  background: url(img/wood_pattern.png);
+}
+
+.tripleWord {
+  background-color: #E63462;
+}
+
+.doubleWord {
+  background-color: #FFCB9A;
+}
+
+.tripleLetter {
+  background-color: #5AB9EA;
+}
+
+.doubleLetter {
+  background-color: #8FC1E3;
+}
+
+.start {
+  background-color: #FFCB9A;
+}
+
+.letter-sideBar {
+  margin: 0 auto;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background-size: cover;
+  background-color: rgb(49, 53, 61);
+  border-radius: 4px;
+  -webkit-transition: opacity .5s;
+  transition: opacity .5s;
+}
+
+.success {
+  margin: 0 auto;
+  width: 90%;
+  height: 90%;
+  position: relative;
+  background-size: cover;
+  /* background: #4BB543; */
+  border-radius: 4px;
+  opacity: 1;
+  -webkit-transition: opacity .5s;
+  transition: opacity .5s;
+}
+
+.board {
+  margin-top: 5px;
+}
+
+.user-info {
+  text-align: center;
+}
+
+.user-info img {
+  float: left;
+  margin-right: 1rem;
+  margin-left: 1rem;
+  width: 50px;
+  height: 50px;
+}
+
+.user-info a {
+  font-size: 16px;
+  color: #818181;
+  vertical-align: middle;
+}
+
+.cover {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: url(img/wood_pattern.png);
+  opacity: 0.5;
+  border-radius: 2px;
+  -webkit-transition: opacity .5s;
+  transition: opacity .5s;
+}
+
+.uncover {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: url(img/wood_pattern.png);
+  opacity: 1;
+  border-radius: 2px;
+  -webkit-transition: opacity .5s;
+  transition: opacity .5s;
+}
+
+.sidenav {
+  left: 0;
+  margin-top: 0;
+  height: 100%;
+  width: 20%;
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  background-color: rgb(49, 53, 61);
+  overflow-x: hidden;
+  padding-top: 20px;
+}
+
+.sidenav a {
+  padding: 6px 8px 6px 16px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+}
+
+.sidenav a:hover {
+  color: #f1f1f1;
+}
+
+.main {
+  margin-left: 160px;
+  /* Same as the width of the sidenav */
+  font-size: 28px;
+  /* Increased text to enable scrolling */
+  padding: 0px 10px;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {
+    padding-top: 15px;
+  }
+
+  .sidenav a {
+    font-size: 18px;
+  }
+}
