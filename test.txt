@@ -1,0 +1,34 @@
+Scenariusze testowe
+
+1. liczba punktow za wyraz
+2. czy wyraz nie koliduje z innymi
+3. poprawne liczenie bonusów za wyrazy
+
+
+Założenia
+
+1. Aplikacja wymaga konta użytkownika
+    1.1 Tabelka w bazie danych z użytkownikami
+    1.2 Tabelka w bazie przechowujaca gry użytkownikow
+        1.2.1 kolumny - id gry, czas startu, czas konca, id uzytkownika 1, id uzytkownika 2, wygrany
+    1.3 Tabelka w bazie przechowujaca historie gry
+        1.3.1 kolumny - id gry, czas, id usera wykonujacego ruch, liczba punktow usera 1, liczba punktow usera 2, nr ruchu, stan planszy, dostepne litery
+
+Gra:
+
+1. aplikacja losuje po 7 liter dla kazdego z graczy z dostepnej puli
+2. gracz 1 zaczyna gre, uklada wyraz i wciska enter
+3. post do serwera 
+
+
+Na start gry insert do tabelki game_history z początkowa plansza w formacie json
+w kazdym kolejnym ruchu porownanie z poprzednim stanem planszy. 
+Jesli wczesniej pole bylo puste a teraz lezy litera to znaczy ze zostala dolozona.
+Jesli pole wczesniej bylo wypelnione, to teraz musi miec to sama wartosc. 
+Sprawdzenie czy dolozone litery znajduja sie w jednej osii.
+Sprawdzenie czy dolozone litery zawieraja sie w literach przydzielonych dla gracza
+Ulozenie slowa i sprawdzenie jego poprawnosci.
+Jesli wszystko ok to zwracamy liczbe punktow i kolejne litery.
+Insert do tabelki kolejnego ruchu.
+
+Tabelka z logami zapisuja kazdy request

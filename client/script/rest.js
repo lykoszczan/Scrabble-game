@@ -1,6 +1,8 @@
+const http = 'http://192.168.0.20:52922/';
+
 function CheckWord(word) {
     let isCorrectWord;
-    $.get('http://localhost:52922/words', {
+    $.get(`${http}words`, {
         id: word
     }, function (data) {
         (data[0]) ? isCorrectWord = true: isCorrectWord = false;
@@ -10,8 +12,8 @@ function CheckWord(word) {
 
 function getLetters() {
     let count = 7 - avaibleLetters.length;
-    $.get('http://localhost:52922/letters', {
-        id: count
+    $.get(`${http}letters`, {
+        count: count
     }, function (data) {
         console.log(data);
         avaibleLetters = avaibleLetters.concat(data);
@@ -34,7 +36,7 @@ function getLetters() {
 }
 
 function findLetter(letter) {
-    $.get('http://localhost:52922/letterValues', {
+    $.get(`${http}letterValues`, {
         letter: letter
     }, function (letterObject) {
         let obj = document.getElementById(lastSelectedID);
@@ -53,7 +55,7 @@ function findLetter(letter) {
 }
 
 function getFields() {
-    $.get('http://localhost:52922/fields', function (data) {
+    $.get(`${http}fields`, function (data) {
         fieldsValues = Array.from(data);
 
         fieldsValues.forEach(x => {
