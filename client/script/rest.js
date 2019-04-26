@@ -1,4 +1,4 @@
-const http = 'http://192.168.0.20:52922/';
+const http = 'http://10.0.24.112:52922/';
 
 function CheckWord(word) {
     let isCorrectWord;
@@ -66,4 +66,36 @@ function getFields() {
             obj.innerText = x.text;
         })
     });
+}
+
+function newWord() {
+
+    let temp = [];
+
+    currentLetters.forEach(x => {
+        temp.push({
+            field: x.field,
+            letter: x.letter
+        });
+    });
+
+    // temp.push({
+    //     field: 'G8',
+    //     value: 'T'
+    // }, {
+    //     field: 'I8',
+    //     value: 'T'
+    // }, {
+    //     field: 'J8',
+    //     value: 'A'
+    // })
+
+    var uriPar = encodeURIComponent(JSON.stringify(temp));
+    $.post(`${http}newword/${uriPar}`, function (result) {
+            console.log(result);
+        })
+        .fail(function (response) {
+            alert(response.responseText);
+        });
+
 }

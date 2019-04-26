@@ -1,23 +1,3 @@
-function checkWordDirection() {
-    let correctPosition = true;
-
-    for (let i = 0; i < currentLetters.length - 1; i++) {
-        let colA = currentLetters[i].field.slice(1);
-        let colB = currentLetters[i + 1].field.slice(1);
-        let rowA = currentLetters[i].field.slice(0, 1);
-        let rowB = currentLetters[i + 1].field.slice(0, 1);
-
-
-        if (colA != colB && rowA != rowB) {
-            alert('Słowa moga być układane tylko poziomio lub pionowo');
-            correctPosition = false;
-            break;
-        }
-    }
-
-    return correctPosition;
-}
-
 function getVertWord(currentLetter) {
 
     let fieldsVert = [];
@@ -155,9 +135,4 @@ function getEmptyFields() {
     });
 
     return possibleWords;
-}
-
-
-function checkNearestPositions() {
-    //slowa we wszystkich plaszczyznach
 }

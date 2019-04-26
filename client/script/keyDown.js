@@ -37,7 +37,7 @@ function keyDownEvent(e) {
             lostFocus();
             if (checkWordDirection()) {
                 let words = getEmptyFields();
-                //checkNearestPositions();
+
                 let word = currentLetters.map(x => x.letter).join('');
 
                 if (words.length == 0)

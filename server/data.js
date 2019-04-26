@@ -12,12 +12,41 @@ module.exports = {
         }
         console.log(allLetters.length);
         return letters;
-        //debug
-        //return allLetters.concat(letters);
     },
 
     getLetterValues: function (letter) {
         return LetterValues.find(x => x.letter == letter);
+    },
+
+    getRandomLetters: function (bag, count = 7) {
+        let min = 0;
+        let max = bag.length - 1;
+        let random;
+        let letters = [];
+        for (let i = 0; i < count; i++) {
+            random = Math.floor(Math.random() * (+max - +min)) + +min;
+            letters.push(bag[random]);
+            bag.splice(random, 1);
+            max = bag.length - 1;
+        }
+
+        return {
+            bag: bag,
+            letters: letters
+        };
+    },
+
+    getAllPossibleLetters: function () {
+        let allPossibleValues = [];
+
+        LetterValues.forEach(x => {
+            for (let i = 0; i < x.count; i++) {
+                allPossibleValues.push(x);
+            }
+
+        })
+
+        return allPossibleValues.map(x => x.letter);
     }
 
 

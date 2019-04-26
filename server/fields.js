@@ -1,6 +1,23 @@
 module.exports = {
-    getfields: function () {
-        return fieldsValues;
+    getAllfields: function () {
+        return fieldsValues
+    },
+
+    getfieldsLight: function () {
+        const fieldsValuesLight = [];
+        fieldsValues.forEach(x => {
+            fieldsValuesLight.push(wrapObject(x));
+        });
+
+        return fieldsValuesLight;
+    },
+
+    getfield: function (id) {
+        return fieldsValues.find(x => x.field == id);
+    },
+
+    getfieldBonus: function (id) {
+        return fieldsValues.find(x => x.field == id).fieldClass;
     }
 }
 
@@ -9,6 +26,15 @@ const tripleLetterCaption = 'Potrójna premia literowa';
 const doubleWordCaption = 'Podwójna premia słowna';
 const doubleLetterCaption = 'Podwójna premia literowa';
 
+function wrapObject({
+    field,
+    value
+}) {
+    return {
+        field,
+        value
+    };
+}
 
 const fieldsValues = [{
         field: 'A1',
