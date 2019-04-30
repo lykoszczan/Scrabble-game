@@ -62,7 +62,21 @@ function setFocus() {
     obj.style.opacity = 0.5;
 }
 
-function selectNewWord(isCorrectWord, word) {
+function selectNewWord(isCorrectWord, result) {
+
+    let data = JSON.parse(result);
+    console.log(data);
+
+    data.forEach(x => {
+        const arr = x.fields.split(',');
+        arr.forEach(id => {
+            let obj = document.getElementById(id);
+            if (obj.childElementCount > 0) {
+                obj.firstElementChild.firstElementChild.classList.add('new');
+            }
+        })
+    });
+
     let elements = document.getElementsByClassName('new');
     elements = Array.from(elements);
     elements.forEach(x => {
@@ -111,7 +125,7 @@ function selectNewWord(isCorrectWord, word) {
             $('.timer').countTo(countData);
         }, 300);
 
-        console.log(`Słowo: ${word}`, `Wynik: ${score}`);
+        //console.log(`Słowo: ${word}`, `Wynik: ${score}`);
         currentLetters.length = 0;
         getLetters();
     } else {

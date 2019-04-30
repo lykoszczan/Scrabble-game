@@ -35,15 +35,13 @@ function keyDownEvent(e) {
         if (currentLetters.length != 0) {
 
             lostFocus();
-            if (checkWordDirection()) {
-                let words = getEmptyFields();
+            let words = getEmptyFields();
+            let word = currentLetters.map(x => x.letter).join('');
 
-                let word = currentLetters.map(x => x.letter).join('');
-
-                if (words.length == 0)
-                    words = word;
-                CheckWord(words);
-            }
+            if (words.length == 0)
+                words = word;
+            //CheckWord(words);
+            newWord(currentLetters);
 
             return;
         }

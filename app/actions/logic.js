@@ -1,11 +1,52 @@
 var data = require('./data');
 var fields = require('./fields');
+var options = require('./options.js');
+var mysql = require('./mysql.js');
+
+class letterScore {
+    constructor(field, letter, isNew = false) {
+        this.field = field;
+        this.letter = letter;
+        let item = fields.getfield(field);
+
+        if (isNew) {
+            switch (item.fieldClass) {
+                case 'tripleWord':
+                    this.wordBonus = 3;
+                    this.letterBonus = 1;
+                    break;
+                case 'doubleWord':
+                    this.wordBonus = 2;
+                    this.letterBonus = 1;
+                    break;
+                case 'tripleLetter':
+                    this.wordBonus = 1;
+                    this.letterBonus = 3;
+                    break;
+                case 'doubleLetter':
+                    this.wordBonus = 1;
+                    this.letterBonus = 2;
+                    break;
+                default:
+                    this.wordBonus = 1;
+                    this.letterBonus = 1;
+            }
+        } else {
+            this.wordBonus = 1;
+            this.letterBonus = 1;
+        }
+
+        this.value = data.getLetterValues(letter);
+        this.isNew = isNew;
+    }
+}
 
 module.exports = class checkRules {
 
     constructor(letters, board) {
         this.currentLetters = [];
         this.board = [];
+        this.words = [];
         for (const letter in letters) {
             if (letters.hasOwnProperty(letter)) {
                 const element = letters[letter];
@@ -59,7 +100,10 @@ module.exports = class checkRules {
         let columnsEqual = this.currentLetters.every(isVertical);
 
         if (!(rowsEqual || columnsEqual)) {
-            return res.status(400).send('Litery mogą być ułożone tylko w jednym poziomie');
+            //return res.status(400).send('Litery mogą być ułożone tylko w jednym poziomie');
+            throw {
+                msg: 'Litery mogą być ułożone tylko w jednym poziomie'
+            };
         }
     }
 
@@ -83,7 +127,10 @@ module.exports = class checkRules {
         }
 
         if (!found) {
-            return res.status(400).send('Zostały wprowadzone litery różne od przypisanych!');
+            //return res.status(400).send('Zostały wprowadzone litery różne od przypisanych!');
+            throw {
+                msg: 'Zostały wprowadzone litery różne od przypisanych!'
+            };
         }
     }
 
@@ -91,11 +138,14 @@ module.exports = class checkRules {
         if (this.currentLetters.find(x => x.field == 'H8')) {
             return true;
         } else {
-            return res.status(400).send('Pole Start musi zostać wypełnione!');
+            //return res.status(400).send('Pole Start musi zostać wypełnione!');
+            throw {
+                msg: "Pole Start musi zostać wypełnione!"
+            };
         }
     }
 
-    isCorrectWord(res) {
+    getPossibleWords(res) {
         this.currentLetters.sort(function (a, b) {
             return a.field.length - b.field.length ||
                 a.field.localeCompare(b.field);
@@ -103,81 +153,22 @@ module.exports = class checkRules {
 
         let possibleWords = [];
 
-        console.log(this.board.find(x => x.value != ''));
-
         this.currentLetters.forEach(x => {
-            let wordHorz = getHorzWord(x, this.board);
-            if (wordHorz.length > 0 && possibleWords.findIndex(x => x == wordHorz) < 0) {
+            let wordHorz = getHorzWord(x, this.board, this.currentLetters);
+            if (wordHorz.word.length > 0 && possibleWords.findIndex(x => x.fields == wordHorz.fields) < 0) {
                 possibleWords.push(wordHorz);
             }
-            let wordVert = getVertWord(x, this.board);
-            if (wordVert.length > 0 && possibleWords.findIndex(x => x == wordVert) < 0) {
+            let wordVert = getVertWord(x, this.board, this.currentLetters);
+            if (wordVert.word.length > 0 && possibleWords.findIndex(x => x.fields == wordVert.fields) < 0) {
                 possibleWords.push(wordVert);
             }
-
         });
 
-
-        console.log(possibleWords);
+        this.words = possibleWords;
     }
 }
 
-class letterScore {
-    constructor(field, letter, isNew = false) {
-        this.field = field;
-        this.letter = letter;
-        let item = fields.getfield(field);
-
-        if (isNew) {
-            switch (item.fieldClass) {
-                case 'tripleWord':
-                    this.wordBonus = 3;
-                    this.letterBonus = 1;
-                    break;
-                case 'doubleWord':
-                    this.wordBonus = 2;
-                    this.letterBonus = 1;
-                    break;
-                case 'tripleLetter':
-                    this.wordBonus = 1;
-                    this.letterBonus = 3;
-                    break;
-                case 'doubleLetter':
-                    this.wordBonus = 1;
-                    this.letterBonus = 2;
-                    break;
-                default:
-                    this.wordBonus = 1;
-                    this.letterBonus = 1;
-            }
-        } else {
-            this.wordBonus = 1;
-            this.letterBonus = 1;
-        }
-
-        this.value = data.getLetterValues(letter);
-        this.isNew = isNew;
-    }
-}
-
-
-function currentLettersPush(arr, field, letter, isNew = false) {
-    let letterValue = data.getLetterValues(letter);
-    let letterBonus;
-    if (isNew) {
-        letterBonus = fields.getfieldBonus(field);
-    } else {
-        letterBonus = 1;
-    }
-    arr.push({
-        field: field,
-        letter: letter,
-        letterValue: letterValue.value,
-        fieldClass: letterBonus
-    });
-}
-
-function getVertWord(currentLetter, board) {
+function getVertWord(currentLetter, board, arr) {
 
     let fieldsVert = [];
     let hasLettersOnEnds;
@@ -191,8 +182,8 @@ function getVertWord(currentLetter, board) {
             let item = board.find(x => x.field == id);
             let fieldValue = item.value;
 
-            if (fieldValue.lenght > 0) {
-                if (this.currentLetters.findIndex(x => x.field == id) < 0) {
+            if (/[A-Z]/i.test(fieldValue.toUpperCase())) {
+                if (arr.findIndex(x => x.field == id) < 0) {
                     fieldsVert.push(new letterScore(id, fieldValue, false));
                 }
                 hasLettersOnEnds = true;
@@ -211,8 +202,8 @@ function getVertWord(currentLetter, board) {
             let item = board.find(x => x.field == id);
             let fieldValue = item.value;
 
-            if (fieldValue.lenght > 0) {
-                if (this.currentLetters.findIndex(x => x.field == id) < 0) {
+            if (/[A-Z]/i.test(fieldValue.toUpperCase())) {
+                if (arr.findIndex(x => x.field == id) < 0) {
                     fieldsVert.push(new letterScore(id, fieldValue, false));
                 }
                 hasLettersOnEnds = true;
@@ -222,17 +213,22 @@ function getVertWord(currentLetter, board) {
     } while (hasLettersOnEnds);
 
     if (fieldsVert.length > 0) {
-        fieldsVert = fieldsVert.concat(this.currentLetters);
+        fieldsVert = fieldsVert.concat(arr);
         fieldsVert.sort(function (a, b) {
             return a.field.length - b.field.length ||
                 a.field.localeCompare(b.field);
         });
     }
 
-    return fieldsVert.map(e => e.letter).join("");
+    return {
+        word: fieldsVert.map(e => e.letter).join(""),
+        fields: fieldsVert.map(e => e.field).join(",")
+    };
+
+    //return fieldsVert.map(e => e.letter).join("");
 }
 
-function getHorzWord(currentLetter, board) {
+function getHorzWord(currentLetter, board, arr) {
     let fieldsHorz = [];
     let hasLettersOnSides
     let element = currentLetter.field;
@@ -245,8 +241,8 @@ function getHorzWord(currentLetter, board) {
             let item = board.find(x => x.field == id);
             let fieldValue = item.value;
 
-            if (fieldValue.lenght > 0) {
-                if (this.currentLetters.findIndex(x => x.field == id) < 0) {
+            if (/[A-Z]/i.test(fieldValue.toUpperCase())) {
+                if (arr.findIndex(x => x.field == id) < 0) {
                     fieldsVert.push(new letterScore(id, fieldValue, false));
                 }
                 hasLettersOnEnds = true;
@@ -266,8 +262,8 @@ function getHorzWord(currentLetter, board) {
             let item = board.find(x => x.field == id);
             let fieldValue = item.value;
 
-            if (fieldValue.lenght > 0) {
-                if (this.currentLetters.findIndex(x => x.field == id) < 0) {
+            if (/[A-Z]/i.test(fieldValue.toUpperCase())) {
+                if (arr.findIndex(x => x.field == id) < 0) {
                     fieldsVert.push(new letterScore(id, fieldValue, false));
                 }
                 hasLettersOnEnds = true;
@@ -279,14 +275,17 @@ function getHorzWord(currentLetter, board) {
 
 
     if (fieldsHorz.length > 0) {
-        fieldsHorz = fieldsHorz.concat(currentLetters);
+        fieldsHorz = fieldsHorz.concat(arr);
         fieldsHorz.sort(function (a, b) {
             return a.field.length - b.field.length ||
                 a.field.localeCompare(b.field);
         });
     }
 
+    return {
+        word: fieldsHorz.map(e => e.letter).join(""),
+        fields: fieldsHorz.map(e => e.field).join(",")
+    };
 
-
-    return fieldsHorz.map(e => e.letter).join("");
+    //return fieldsHorz.map(e => e.letter).join("");
 }

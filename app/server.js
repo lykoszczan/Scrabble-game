@@ -2,12 +2,12 @@ var express = require('express');
 var moment = require('moment');
 var app = express();
 var bodyParser = require('body-parser');
-var data = require('./server/data');
-var fields = require('./server/fields');
-var options = require('./server/options');
-var mysql = require('./server/mysql.js');
-var logic = require('./server/logic.js');
-
+var data = require('./actions/data.js');
+var fields = require('./actions/fields.js');
+var options = require('./actions/options.js');
+var mysql = require('./actions/mysql.js');
+var logic = require('./actions/logic.js');
+var qo = require('./actions/queryObject.js');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -22,7 +22,7 @@ var db = new mysql({
 	password: options.storageConfig.password
 })
 
-app.use(express.static(__dirname + `/client`));
+app.use(express.static(__dirname + `/public`));
 app.use("/public", express.static('public'));
 
 app.use(function (req, res, next) {
@@ -78,33 +78,73 @@ app.post('/newgame', (req, res) => {
 app.post('/newword/:currentLetters', (req, res) => {
 
 	//let debug = '%5B%7B%22field%22%3A%22G8%22%2C%22value%22%3A%22T%22%7D%2C%7B%22field%22%3A%22I8%22%2C%22value%22%3A%22T%22%7D%2C%7B%22field%22%3A%22J8%22%2C%22value%22%3A%22A%22%7D%5D';
-	let currentLetters = JSON.parse(req.params.currentLetters);
 	//let currentLetters = JSON.parse(debug);
 
+	let currentLetters = JSON.parse(req.params.currentLetters);
 	let userId = 1;
 	let gameId = 1243;
-
+	let queryData;
+	let board;
+	let rules;
 	let queryResult;
 
 	let query = `SELECT * FROM games_history WHERE user_id = '${userId}' AND game_id = '${gameId}' ORDER BY round LIMIT 1`;
 	db.query(query)
 		.then(result => {
 			queryResult = result;
+			queryData = JSON.parse(JSON.stringify(queryResult[0]));
 		})
 		.then(() => {
-
-			let data = JSON.parse(JSON.stringify(queryResult[0]));
-
-			let rules = new logic(currentLetters, data.board);
-			if (data.round === 0) {
+			rules = new logic(currentLetters, queryData.board);
+			if (queryData.round === 0) {
 				rules.isStartFieldFilled(res);
 			}
-			//rules.haveTheLettersChanged(res, data.user_letters);
+			rules.haveTheLettersChanged(res, queryData.user_letters);
 			rules.areLettersInOneDirection(res);
-			rules.isCorrectWord(res);
+			rules.getPossibleWords(res);
+			let words = rules.words;
+			board = rules.board;
+			let counter = 0;
+			words.forEach(x => {
+				query = `SELECT * FROM words WHERE word = '${x.word}'`;
+				db.query(query).then(result => {
+					if (result[0] === undefined) {
+						return res.status(400).json({
+							msg: `Słowo ${x.word} nie istnieje!`,
+							fields: x.fields
+						})
+					}
+					counter++;
+					//przerobic na promises
+					if (counter == words.length) {
+						res.json(JSON.stringify(words));
+					}
+				})
+			});
 
+		}, err => {
+			throw err;
+		})
+		.then(() => {
+			let queryObject = new qo(queryData, currentLetters);
+
+			let item = data.getRandomLetters(queryData.avaible_letters.split(','), currentLetters.length);
+			let letters = queryData.user_letters.split('');
+
+			let newLetters = letters.filter(f => !currentLetters.find(x => x.letter == f));
+			newLetters = newLetters.join('').concat(item.letters.join(''));
+
+
+			let time = moment().format("YYYY-MM-DD HH:mm:ss");
+			let round = new Number(queryData.round) + 1;
+
+			query = `INSERT INTO games_history(game_id,time,user_id,user_score,round,board,user_letters,avaible_letters) 
+				VALUES('${gameId}','${time}',1,0,${round},'${JSON.stringify(board)}','${newLetters}','${item.bag}')`;
+			db.query(query).then((result) => console.log(result));
+		})
+		.catch(err => {
+			return res.status(400).json(error);
 		});
-
 });
 
 app.get('/letters', (req, res) => {

@@ -68,31 +68,20 @@ function getFields() {
     });
 }
 
-function newWord() {
+function newWord(arr) {
 
     let temp = [];
-
-    currentLetters.forEach(x => {
+    arr.forEach(x => {
         temp.push({
             field: x.field,
             letter: x.letter
         });
     });
 
-    // temp.push({
-    //     field: 'G8',
-    //     value: 'T'
-    // }, {
-    //     field: 'I8',
-    //     value: 'T'
-    // }, {
-    //     field: 'J8',
-    //     value: 'A'
-    // })
-
     var uriPar = encodeURIComponent(JSON.stringify(temp));
     $.post(`${http}newword/${uriPar}`, function (result) {
-            console.log(result);
+            //console.log(result);
+            selectNewWord(true, result);
         })
         .fail(function (response) {
             alert(response.responseText);
