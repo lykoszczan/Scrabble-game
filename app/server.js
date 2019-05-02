@@ -75,20 +75,36 @@ app.post('/newgame', (req, res) => {
 		});
 });
 
-app.post('/newword/:currentLetters', (req, res) => {
+app.get('/continue/:userId.:gameId', (req, res) => {
+	let userId = JSON.parse(req.params.userId);
+	let gameId = JSON.parse(req.params.gameId);
+	let queryData;
 
-	//let debug = '%5B%7B%22field%22%3A%22G8%22%2C%22value%22%3A%22T%22%7D%2C%7B%22field%22%3A%22I8%22%2C%22value%22%3A%22T%22%7D%2C%7B%22field%22%3A%22J8%22%2C%22value%22%3A%22A%22%7D%5D';
-	//let currentLetters = JSON.parse(debug);
+	let query = `SELECT * FROM games_history WHERE user_id = '${userId}' AND game_id = '${gameId}' ORDER BY round DESC LIMIT 1`;
+	db.query(query)
+		.then(result => {
+			queryData = JSON.parse(JSON.stringify(result[0]));
+		})
+		.then(result => {
+			res.json({
+				score: queryData.user_score,
+				round: queryData.round,
+				board: queryData.board,
+				user_letters: queryData.user_letters,
+				bag: queryData.avaible_letters
+			})
+		});
+
+});
+
+app.post('/newword/:currentLetters', (req, res) => {
 
 	let currentLetters = JSON.parse(req.params.currentLetters);
 	let userId = 1;
 	let gameId = 1243;
-	let queryData;
-	let board;
-	let rules;
-	let queryResult;
+	let queryData, board, rules, queryResult;
 
-	let query = `SELECT * FROM games_history WHERE user_id = '${userId}' AND game_id = '${gameId}' ORDER BY round LIMIT 1`;
+	let query = `SELECT * FROM games_history WHERE user_id = '${userId}' AND game_id = '${gameId}' ORDER BY round DESC LIMIT 1`;
 	db.query(query)
 		.then(result => {
 			queryResult = result;
@@ -97,53 +113,46 @@ app.post('/newword/:currentLetters', (req, res) => {
 		.then(() => {
 			rules = new logic(currentLetters, queryData.board);
 			if (queryData.round === 0) {
-				rules.isStartFieldFilled(res);
+				rules.isStartFieldFilled();
 			}
-			rules.haveTheLettersChanged(res, queryData.user_letters);
-			rules.areLettersInOneDirection(res);
-			rules.getPossibleWords(res);
-			let words = rules.words;
+			rules.haveTheLettersChanged(queryData.user_letters);
+			rules.areLettersInOneDirection();
+			rules.getPossibleWords();
+
 			board = rules.board;
+			//let words = rules.words;
 			let counter = 0;
-			words.forEach(x => {
+			rules.words.forEach(x => {
 				query = `SELECT * FROM words WHERE word = '${x.word}'`;
 				db.query(query).then(result => {
-					if (result[0] === undefined) {
-						return res.status(400).json({
-							msg: `Słowo ${x.word} nie istnieje!`,
-							fields: x.fields
-						})
-					}
-					counter++;
-					//przerobic na promises
-					if (counter == words.length) {
-						res.json(JSON.stringify(words));
-					}
-				})
+						if (result[0] === undefined) {
+							throw {
+								msg: `Słowo ${x.word} nie istnieje!`,
+								fields: x.fields
+							}
+						}
+						counter++;
+						//przerobic na promises
+						if (counter == rules.words.length) {
+							let queryObject = new qo(queryData, currentLetters);
+							query = `INSERT INTO games_history(game_id,time,user_id,user_score,round,board,user_letters,avaible_letters) 
+							VALUES('${queryObject.gameId}','${queryObject.time}',1,0,${queryObject.round},'${JSON.stringify(board)}','${queryObject.newLetters}','${queryObject.bag}')`;
+							db.query(query).then(() => {
+								res.json({
+									data: JSON.stringify(rules.words),
+									newLetters: queryObject.newLetters
+								});
+							});
+						}
+					})
+					.catch(err => {
+						return res.status(400).json(err);
+					})
 			});
 
-		}, err => {
-			throw err;
-		})
-		.then(() => {
-			let queryObject = new qo(queryData, currentLetters);
-
-			let item = data.getRandomLetters(queryData.avaible_letters.split(','), currentLetters.length);
-			let letters = queryData.user_letters.split('');
-
-			let newLetters = letters.filter(f => !currentLetters.find(x => x.letter == f));
-			newLetters = newLetters.join('').concat(item.letters.join(''));
-
-
-			let time = moment().format("YYYY-MM-DD HH:mm:ss");
-			let round = new Number(queryData.round) + 1;
-
-			query = `INSERT INTO games_history(game_id,time,user_id,user_score,round,board,user_letters,avaible_letters) 
-				VALUES('${gameId}','${time}',1,0,${round},'${JSON.stringify(board)}','${newLetters}','${item.bag}')`;
-			db.query(query).then((result) => console.log(result));
 		})
 		.catch(err => {
-			return res.status(400).json(error);
+			return res.status(400).json(err);
 		});
 });
 
@@ -162,6 +171,14 @@ app.get('/letterValues', (req, res) => {
 app.get('/fields', (req, res) => {
 	let str = fields.getAllfields();
 	res.send(str);
+})
+
+app.get('/allletters', (req, res) => {
+	const letters = data.getAllLetterValues();
+
+	res.json({
+		allLetters: letters
+	});
 })
 
 let server = app.listen(52922, () => {

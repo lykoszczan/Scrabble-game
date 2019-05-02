@@ -1,7 +1,7 @@
 var data = require('./data');
 var fields = require('./fields');
-var options = require('./options.js');
-var mysql = require('./mysql.js');
+// var options = require('./options.js');
+// var mysql = require('./mysql.js');
 
 class letterScore {
     constructor(field, letter, isNew = false) {
@@ -87,7 +87,7 @@ module.exports = class checkRules {
         return newfields;
     }
 
-    areLettersInOneDirection(res) {
+    areLettersInOneDirection() {
         function isHorizontal(element, index, array) {
             return (element.field[0] === array[0].field[0]);
         }
@@ -100,14 +100,13 @@ module.exports = class checkRules {
         let columnsEqual = this.currentLetters.every(isVertical);
 
         if (!(rowsEqual || columnsEqual)) {
-            //return res.status(400).send('Litery mogą być ułożone tylko w jednym poziomie');
             throw {
                 msg: 'Litery mogą być ułożone tylko w jednym poziomie'
             };
         }
     }
 
-    haveTheLettersChanged(res, user_letters) {
+    haveTheLettersChanged(user_letters) {
         let dbLetters = user_letters.split('');
         var BreakException = {};
         let found = true;
@@ -127,25 +126,23 @@ module.exports = class checkRules {
         }
 
         if (!found) {
-            //return res.status(400).send('Zostały wprowadzone litery różne od przypisanych!');
             throw {
                 msg: 'Zostały wprowadzone litery różne od przypisanych!'
             };
         }
     }
 
-    isStartFieldFilled(res) {
+    isStartFieldFilled() {
         if (this.currentLetters.find(x => x.field == 'H8')) {
             return true;
         } else {
-            //return res.status(400).send('Pole Start musi zostać wypełnione!');
             throw {
                 msg: "Pole Start musi zostać wypełnione!"
             };
         }
     }
 
-    getPossibleWords(res) {
+    getPossibleWords() {
         this.currentLetters.sort(function (a, b) {
             return a.field.length - b.field.length ||
                 a.field.localeCompare(b.field);
@@ -163,9 +160,17 @@ module.exports = class checkRules {
                 possibleWords.push(wordVert);
             }
         });
-
-        this.words = possibleWords;
+        this.score = possibleWords.sum("score");
+        this.words = Array.from(possibleWords);
     }
+}
+
+Array.prototype.sum = function (prop) {
+    let total = 0
+    for (let i = 0, _len = this.length; i < _len; i++) {
+        total += this[i][prop]
+    }
+    return total
 }
 
 function getVertWord(currentLetter, board, arr) {
@@ -182,7 +187,7 @@ function getVertWord(currentLetter, board, arr) {
             let item = board.find(x => x.field == id);
             let fieldValue = item.value;
 
-            if (/[A-Z]/i.test(fieldValue.toUpperCase())) {
+            if (fieldValue !== "") {
                 if (arr.findIndex(x => x.field == id) < 0) {
                     fieldsVert.push(new letterScore(id, fieldValue, false));
                 }
@@ -201,8 +206,7 @@ function getVertWord(currentLetter, board, arr) {
 
             let item = board.find(x => x.field == id);
             let fieldValue = item.value;
-
-            if (/[A-Z]/i.test(fieldValue.toUpperCase())) {
+            if (fieldValue !== "") {
                 if (arr.findIndex(x => x.field == id) < 0) {
                     fieldsVert.push(new letterScore(id, fieldValue, false));
                 }
@@ -213,24 +217,30 @@ function getVertWord(currentLetter, board, arr) {
     } while (hasLettersOnEnds);
 
     if (fieldsVert.length > 0) {
-        fieldsVert = fieldsVert.concat(arr);
+        const vertLetters = arr.filter(x => x.field.slice(1) == fieldsVert[0].field.slice(1));
+        fieldsVert = fieldsVert.concat(vertLetters);
         fieldsVert.sort(function (a, b) {
             return a.field.length - b.field.length ||
                 a.field.localeCompare(b.field);
         });
+
+        fieldsVert.forEach(x => {
+            wordScore += x.value * x.letterBonus;
+            wordBonus *= x.wordBonus;
+        });
+
+        wordScore = wordScore * wordBonus;
     }
 
     return {
         word: fieldsVert.map(e => e.letter).join(""),
         fields: fieldsVert.map(e => e.field).join(",")
     };
-
-    //return fieldsVert.map(e => e.letter).join("");
 }
 
 function getHorzWord(currentLetter, board, arr) {
     let fieldsHorz = [];
-    let hasLettersOnSides
+    let hasLettersOnSides;
     let element = currentLetter.field;
     //sprawdzenie w prawo
     do {
@@ -241,9 +251,9 @@ function getHorzWord(currentLetter, board, arr) {
             let item = board.find(x => x.field == id);
             let fieldValue = item.value;
 
-            if (/[A-Z]/i.test(fieldValue.toUpperCase())) {
+            if (fieldValue !== "") {
                 if (arr.findIndex(x => x.field == id) < 0) {
-                    fieldsVert.push(new letterScore(id, fieldValue, false));
+                    fieldsHorz.push(new letterScore(id, fieldValue, false));
                 }
                 hasLettersOnEnds = true;
                 element = id;
@@ -262,30 +272,37 @@ function getHorzWord(currentLetter, board, arr) {
             let item = board.find(x => x.field == id);
             let fieldValue = item.value;
 
-            if (/[A-Z]/i.test(fieldValue.toUpperCase())) {
+            if (fieldValue !== "") {
                 if (arr.findIndex(x => x.field == id) < 0) {
-                    fieldsVert.push(new letterScore(id, fieldValue, false));
+                    fieldsHorz.push(new letterScore(id, fieldValue, false));
                 }
                 hasLettersOnEnds = true;
                 element = id;
             }
-
         }
     } while (hasLettersOnSides);
 
-
+    let wordScore = 0;
+    let wordBonus = 1;
     if (fieldsHorz.length > 0) {
-        fieldsHorz = fieldsHorz.concat(arr);
+        const horzLetters = arr.filter(x => x.field.slice(0, 1) == fieldsHorz[0].field.slice(0, 1));
+        fieldsHorz = fieldsHorz.concat(horzLetters);
         fieldsHorz.sort(function (a, b) {
             return a.field.length - b.field.length ||
                 a.field.localeCompare(b.field);
         });
+
+        fieldsHorz.forEach(x => {
+            wordScore += x.value * x.letterBonus;
+            wordBonus *= x.wordBonus;
+        });
+
+        wordScore = wordScore * wordBonus;
     }
 
     return {
         word: fieldsHorz.map(e => e.letter).join(""),
-        fields: fieldsHorz.map(e => e.field).join(",")
+        fields: fieldsHorz.map(e => e.field).join(","),
+        score: wordScore
     };
-
-    //return fieldsHorz.map(e => e.letter).join("");
 }

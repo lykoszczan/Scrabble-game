@@ -62,10 +62,7 @@ function setFocus() {
     obj.style.opacity = 0.5;
 }
 
-function selectNewWord(isCorrectWord, result) {
-
-    let data = JSON.parse(result);
-    console.log(data);
+function selectNewWord(isCorrectWord, data, score = 0, scoreBefore = 0) {
 
     data.forEach(x => {
         const arr = x.fields.split(',');
@@ -101,13 +98,6 @@ function selectNewWord(isCorrectWord, result) {
         }, 1200);
     });
     if (isCorrectWord) {
-        let scoreBefore = score;
-        currentLetters.forEach(x => {
-            score += x.value;
-            bonus *= x.wordBonus;
-        });
-
-        score *= bonus;
         let obj = document.getElementsByClassName('timer')[0];
         obj.setAttribute('data-from', obj.innerText);
         obj.setAttribute('data-to', `${score}`);
@@ -168,16 +158,17 @@ function checkPolishLetters(letter) {
 
 function onStart() {
     getFields();
+    getAllLettersValues();
+    continueGame(1, 1243);
 
     let fields = document.getElementsByClassName("pole");
-
     Array.from(fields).forEach(function (element) {
         element.addEventListener('click', selectField, false);
     });
 
-    getLetters();
+    //getLetters();
 }
-
+let allLetters;
 let fieldsValues;
 window.onload = onStart;
 window.addEventListener('keydown', keyDownEvent, false);

@@ -47,6 +47,10 @@ module.exports = {
         })
 
         return allPossibleValues.map(x => x.letter);
+    },
+
+    getAllLetterValues: function () {
+        return LetterValues;
     }
 
 
