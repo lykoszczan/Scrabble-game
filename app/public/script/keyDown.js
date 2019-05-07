@@ -18,10 +18,6 @@ function keyDownEvent(e) {
             }
 
             let undoLettter = currentLetters.splice(index, 1);
-            // avaibleLetters.push({
-            //     letter: undoLettter[0].letter,
-            //     value: undoLettter[0].value
-            // });
             avaibleLetters.push(undoLettter[0].letter);
             let fieldObj = fieldsValues.find(x => x.field == lastSelectedID);
             obj.innerText = fieldObj.text;
@@ -99,19 +95,18 @@ function addLetter(letter, e) {
         if (shouldReturn)
             return;
 
-        //findLetter(letter);
-        let letterObject = allLetters.find(x => x.letter = letter);
+        let letterObject = allLetters.find(x => x.letter == letter);
         let obj = document.getElementById(lastSelectedID);
         obj.innerHTML = `<div class = "success"><div class="letter wood new">${letterObject.letter}<div class="letterValue">${letterObject.value}</div></div></div>`;
         let index = currentLetters.findIndex(x => x.field == lastSelectedID);
-        if (index > -1) {
-            avaibleLetters.push({
-                letter: currentLetters[index].letter,
-                value: letterObject.value
-            });
-            currentLetters[index] = new letterScore(lastSelectedID, letterObject.value, letterObject.letter, true);
-        } else {
-            currentLetters.push(new letterScore(lastSelectedID, letterObject.value, letterObject.letter, true));
+        if (index >= 0) {
+            avaibleLetters.push(currentLetters[index].letter);
         }
+        currentLetters.push({
+            field: lastSelectedID,
+            letter: letterObject.letter,
+            isNew: true
+        });
+
     }
 }
