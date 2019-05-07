@@ -96,7 +96,9 @@ app.get('/continue/:userId.:gameId', (req, res) => {
 		});
 
 });
-
+const newWord = require('./routes/newWord.js');
+app.use('/', newWord);
+// app.post('/newword/:currentLetters', (req, res) => { 
 // 	let currentLetters = JSON.parse(req.params.currentLetters);
 // 	let userId = 1;
 // 	let gameId = 1243;
