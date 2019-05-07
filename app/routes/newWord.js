@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 const express = require('express');
 const options = require('./../actions/options.js');
 const mysql = require('./../actions/mysql.js');
@@ -13,6 +14,10 @@ const db = new mysql({
     password: options.storageConfig.password
 })
 
+=======
+const router = express.Router();
+
+>>>>>>> Stashed changes
 router.post('/newword/:currentLetters', (req, res) => {
 
     let currentLetters = JSON.parse(req.params.currentLetters);
@@ -70,6 +75,10 @@ router.post('/newword/:currentLetters', (req, res) => {
         .catch(err => {
             return res.status(400).json(err);
         });
+<<<<<<< Updated upstream
 });
 
 module.exports = router;
+=======
+});
+>>>>>>> Stashed changes
