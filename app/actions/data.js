@@ -1,5 +1,5 @@
 module.exports = {
-    getLetters: function (id) {
+    getLetterss: function (id) {
         let min = 0;
         let max = allLetters.length - 1;
         let random;

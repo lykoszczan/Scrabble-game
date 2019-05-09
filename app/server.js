@@ -80,7 +80,7 @@ app.get('/continue/:userId.:gameId', (req, res) => {
 	let gameId = JSON.parse(req.params.gameId);
 	let queryData;
 
-	let query = `SELECT * FROM games_history WHERE user_id = '${userId}' AND game_id = '${gameId}' ORDER BY round DESC LIMIT 1`;
+	let query = `SELECT * FROM games_history WHERE user_id = '${db.connection.escape(userId)}' AND game_id = '${db.connection.escape(gameId)}' ORDER BY round DESC LIMIT 1`;
 	db.query(query)
 		.then(result => {
 			queryData = JSON.parse(JSON.stringify(result[0]));

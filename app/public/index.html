@@ -4,6 +4,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Scrabble by lykoszczan</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="style/style.css">
   <link rel="stylesheet" href="style/score.css">
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -13,23 +14,46 @@
 </head>
 
 <body>
-  <div class="sidenav">
-    <div class="Score">
-      <div class="user-info">
-        <img src="style/img/user.svg" alt="" />
-        <span>Wynik</span>
-        <i class="fa fa-arrow-up"></i><span class="timer" data-from="0" data-to="0" data-speed="500"
-          data-refresh-interval="30" id="score">0</span>
+  <div class="bg-image">
+    <div class="sidenav">
+      <div class="sidebar-info Score">
+        <img class="user-image" src="style/img/user.svg" alt="" />
+        <div class="user-info">
+          <span id="username">lykoszczan</span>
+        </div>
+        <div class="user-score">
+          <span>Wynik</span>
+          <!-- <i class="fa fa-arrow-up"></i> -->
+          <span class="timer" data-from="0" data-to="0" data-speed="500" data-refresh-interval="30" id="score">65</span>
+        </div>
+      </div>
+
+      <div class="sidebar-info Score">
+        <img class="user-image" src="style/img/user.svg" alt="" />
+        <div class="user-info">
+          <span id="username">przeciwnik9123</span>
+        </div>
+        <div class="user-score">
+          <span>Wynik</span>
+          <!-- <i class="fa fa-arrow-up"></i> -->
+          <span class="timer" data-from="0" data-to="0" data-speed="500" data-refresh-interval="30" id="score">49</span>
+        </div>
+      </div>
+
+      <div class="sidebar-letters">
+        <table>
+          <tr id="letters">
+          </tr>
+        </table>
+      </div>
+      <div class="sidebar-middle">
+        <button type="button" class="btn btn-primary changeLetters">Wymień litery</button>
+      </div>
+      <div class="sidebar-bottom">
+        <button type="button" class="btn btn-primary">Moje konto</button>
+        <button type="button" class="btn btn-danger">Zakończ grę</button>
       </div>
     </div>
-
-    <div class="sidebar-letters">
-      <table>
-        <tr id="letters">
-        </tr>
-      </table>
-    </div>
-  </div>
 
   </div>
 
@@ -358,6 +382,7 @@
         <th class="column"></th>
       </tr>
     </table>
+  </div>
   </div>
 
   <script type="text/javascript" src="script/score.js"></script>
