@@ -29,3 +29,5 @@ node_modules
 
 server/config.json
 cmd\.exe\.lnk
+
+config\.json

@@ -6,42 +6,42 @@ let currentLetters = new Array();
 let avaibleLetters = new Array();
 
 
-class letterScore {
-    constructor(field, value, letter, isNew = true) {
-        this.field = field;
-        let obj = fieldsValues.find(x => x.field == field);
-        this.letter = letter;
-        if (isNew) {
-            switch (obj.fieldClass) {
-                case 'tripleWord':
-                    this.wordBonus = 3;
-                    this.letterBonus = 1;
-                    break;
-                case 'doubleWord':
-                    this.wordBonus = 2;
-                    this.letterBonus = 1;
-                    break;
-                case 'tripleLetter':
-                    this.wordBonus = 1;
-                    this.letterBonus = 3;
-                    break;
-                case 'doubleLetter':
-                    this.wordBonus = 1;
-                    this.letterBonus = 2;
-                    break;
-                default:
-                    this.wordBonus = 1;
-                    this.letterBonus = 1;
-            }
-        } else {
-            this.wordBonus = 1;
-            this.letterBonus = 1;
-        }
+// class letterScore {
+//     constructor(field, value, letter, isNew = true) {
+//         this.field = field;
+//         let obj = fieldsValues.find(x => x.field == field);
+//         this.letter = letter;
+//         if (isNew) {
+//             switch (obj.fieldClass) {
+//                 case 'tripleWord':
+//                     this.wordBonus = 3;
+//                     this.letterBonus = 1;
+//                     break;
+//                 case 'doubleWord':
+//                     this.wordBonus = 2;
+//                     this.letterBonus = 1;
+//                     break;
+//                 case 'tripleLetter':
+//                     this.wordBonus = 1;
+//                     this.letterBonus = 3;
+//                     break;
+//                 case 'doubleLetter':
+//                     this.wordBonus = 1;
+//                     this.letterBonus = 2;
+//                     break;
+//                 default:
+//                     this.wordBonus = 1;
+//                     this.letterBonus = 1;
+//             }
+//         } else {
+//             this.wordBonus = 1;
+//             this.letterBonus = 1;
+//         }
 
-        this.value = this.letterBonus * value;
-        this.isNew = isNew;
-    }
-}
+//         this.value = this.letterBonus * value;
+//         this.isNew = isNew;
+//     }
+// }
 
 function selectField() {
     lostFocus();
@@ -109,15 +109,11 @@ function selectNewWord(isCorrectWord, data, score = 0, scoreBefore = 0) {
             refreshInterval: 30,
             decimals: 0
         };
-
-
         setTimeout(function () {
             $('.timer').countTo(countData);
         }, 300);
-
-        //console.log(`Słowo: ${word}`, `Wynik: ${score}`);
         currentLetters.length = 0;
-        getLetters();
+
     } else {
         let temp = [];
         currentLetters.forEach(x => {
@@ -127,6 +123,25 @@ function selectNewWord(isCorrectWord, data, score = 0, scoreBefore = 0) {
         });
         currentLetters = Array.from(temp);
     }
+}
+
+function insertNewLetters(newLetters) {
+    let obj = document.getElementById('letters');
+    let html = '';
+    newLetters.forEach(x => {
+        const lett = allLetters.find(item => item.letter == x);
+        if (lett !== undefined) {
+            html +=
+                `<th class="sideBar-pole">
+                <div class="letter-sideBar">
+                <div class="letter wood">${lett.letter}<div class="letterValue">${lett.value}</div>
+                </div>
+                </div>
+                </th>`;
+        }
+    })
+
+    obj.innerHTML = html;
 }
 
 function checkPolishLetters(letter) {

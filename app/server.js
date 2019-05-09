@@ -1,20 +1,20 @@
-var express = require('express');
-var moment = require('moment');
-var app = express();
-var bodyParser = require('body-parser');
-var data = require('./actions/data.js');
-var fields = require('./actions/fields.js');
-var options = require('./actions/options.js');
-var mysql = require('./actions/mysql.js');
-var logic = require('./actions/logic.js');
-var qo = require('./actions/queryObject.js');
+const express = require('express');
+const moment = require('moment');
+const app = express();
+const bodyParser = require('body-parser');
+const data = require('./actions/data.js');
+const fields = require('./actions/fields.js');
+const options = require('./actions/options.js');
+const mysql = require('./actions/mysql.js');
+const logic = require('./actions/logic.js');
+const qo = require('./actions/queryObject.js');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
 	extended: false
 }))
 
-var db = new mysql({
+const db = new mysql({
 	host: options.storageConfig.host,
 	database: options.storageConfig.database,
 	port: options.storageConfig.port,
@@ -34,7 +34,7 @@ app.use(function (req, res, next) {
 
 
 app.get('/words', (req, res) => {
-	var id = req.query.id;
+	const id = req.query.id;
 	console.log(id);
 	sql = `SELECT * FROM words WHERE word = '${id}'`;
 	db.query(sql)
@@ -96,65 +96,65 @@ app.get('/continue/:userId.:gameId', (req, res) => {
 		});
 
 });
+const newWord = require('./routes/newWord.js');
+app.use('/', newWord);
+// app.post('/newword/:currentLetters', (req, res) => { 
+// 	let currentLetters = JSON.parse(req.params.currentLetters);
+// 	let userId = 1;
+// 	let gameId = 1243;
+// 	let queryData, board, rules, queryResult;
 
-app.post('/newword/:currentLetters', (req, res) => {
+// 	let query = `SELECT * FROM games_history WHERE user_id = '${userId}' AND game_id = '${gameId}' ORDER BY round DESC LIMIT 1`;
+// 	db.query(query)
+// 		.then(result => {
+// 			queryResult = result;
+// 			queryData = JSON.parse(JSON.stringify(queryResult[0]));
+// 		})
+// 		.then(() => {
+// 			rules = new logic(currentLetters, queryData.board);
+// 			if (queryData.round === 0) {
+// 				rules.isStartFieldFilled();
+// 			}
+// 			rules.haveTheLettersChanged(queryData.user_letters);
+// 			rules.areLettersInOneDirection();
+// 			rules.getPossibleWords();
 
-	let currentLetters = JSON.parse(req.params.currentLetters);
-	let userId = 1;
-	let gameId = 1243;
-	let queryData, board, rules, queryResult;
+// 			board = rules.board;
+// 			//let words = rules.words;
+// 			let counter = 0;
+// 			rules.words.forEach(x => {
+// 				query = `SELECT * FROM words WHERE word = '${x.word}'`;
+// 				db.query(query).then(result => {
+// 						if (result[0] === undefined) {
+// 							throw {
+// 								msg: `Słowo ${x.word} nie istnieje!`,
+// 								fields: x.fields
+// 							}
+// 						}
+// 						counter++;
+// 						//przerobic na promises
+// 						if (counter == rules.words.length) {
+// 							let queryObject = new qo(queryData, currentLetters);
+// 							query = `INSERT INTO games_history(game_id,time,user_id,user_score,round,board,user_letters,avaible_letters) 
+// 							VALUES('${queryObject.gameId}','${queryObject.time}',1,0,${queryObject.round},'${JSON.stringify(board)}','${queryObject.newLetters}','${queryObject.bag}')`;
+// 							db.query(query).then(() => {
+// 								res.json({
+// 									data: JSON.stringify(rules.words),
+// 									newLetters: queryObject.newLetters
+// 								});
+// 							});
+// 						}
+// 					})
+// 					.catch(err => {
+// 						return res.status(400).json(err);
+// 					})
+// 			});
 
-	let query = `SELECT * FROM games_history WHERE user_id = '${userId}' AND game_id = '${gameId}' ORDER BY round DESC LIMIT 1`;
-	db.query(query)
-		.then(result => {
-			queryResult = result;
-			queryData = JSON.parse(JSON.stringify(queryResult[0]));
-		})
-		.then(() => {
-			rules = new logic(currentLetters, queryData.board);
-			if (queryData.round === 0) {
-				rules.isStartFieldFilled();
-			}
-			rules.haveTheLettersChanged(queryData.user_letters);
-			rules.areLettersInOneDirection();
-			rules.getPossibleWords();
-
-			board = rules.board;
-			//let words = rules.words;
-			let counter = 0;
-			rules.words.forEach(x => {
-				query = `SELECT * FROM words WHERE word = '${x.word}'`;
-				db.query(query).then(result => {
-						if (result[0] === undefined) {
-							throw {
-								msg: `Słowo ${x.word} nie istnieje!`,
-								fields: x.fields
-							}
-						}
-						counter++;
-						//przerobic na promises
-						if (counter == rules.words.length) {
-							let queryObject = new qo(queryData, currentLetters);
-							query = `INSERT INTO games_history(game_id,time,user_id,user_score,round,board,user_letters,avaible_letters) 
-							VALUES('${queryObject.gameId}','${queryObject.time}',1,0,${queryObject.round},'${JSON.stringify(board)}','${queryObject.newLetters}','${queryObject.bag}')`;
-							db.query(query).then(() => {
-								res.json({
-									data: JSON.stringify(rules.words),
-									newLetters: queryObject.newLetters
-								});
-							});
-						}
-					})
-					.catch(err => {
-						return res.status(400).json(err);
-					})
-			});
-
-		})
-		.catch(err => {
-			return res.status(400).json(err);
-		});
-});
+// 		})
+// 		.catch(err => {
+// 			return res.status(400).json(err);
+// 		});
+// });
 
 app.get('/letters', (req, res) => {
 	let count = req.query.count;

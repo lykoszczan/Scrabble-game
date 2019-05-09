@@ -36,7 +36,7 @@ class letterScore {
             this.letterBonus = 1;
         }
 
-        this.value = data.getLetterValues(letter);
+        this.value = data.getLetterValues(letter).value;
         this.isNew = isNew;
     }
 }
@@ -170,7 +170,7 @@ Array.prototype.sum = function (prop) {
     for (let i = 0, _len = this.length; i < _len; i++) {
         total += this[i][prop]
     }
-    return total
+    return total;
 }
 
 function getVertWord(currentLetter, board, arr) {
@@ -216,6 +216,8 @@ function getVertWord(currentLetter, board, arr) {
         }
     } while (hasLettersOnEnds);
 
+    let wordScore = 0;
+    let wordBonus = 1;
     if (fieldsVert.length > 0) {
         const vertLetters = arr.filter(x => x.field.slice(1) == fieldsVert[0].field.slice(1));
         fieldsVert = fieldsVert.concat(vertLetters);
@@ -234,7 +236,8 @@ function getVertWord(currentLetter, board, arr) {
 
     return {
         word: fieldsVert.map(e => e.letter).join(""),
-        fields: fieldsVert.map(e => e.field).join(",")
+        fields: fieldsVert.map(e => e.field).join(","),
+        score: wordScore
     };
 }
 
