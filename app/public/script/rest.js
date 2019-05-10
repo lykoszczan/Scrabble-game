@@ -16,13 +16,13 @@ function getFields() {
                 obj.classList.add(x.fieldClass);
             }
             obj.innerText = x.text;
-        })
+        });
     });
 }
 
-function newWord(arr) {
+function newWord(letters) {
     let temp = [];
-    arr.forEach(x => {
+    letters.forEach(x => {
         temp.push({
             field: x.field,
             letter: x.letter
@@ -33,7 +33,7 @@ function newWord(arr) {
             const data = JSON.parse(result.data);
             avaibleLetters = result.newLetters.split('');
             insertNewLetters(avaibleLetters);
-            selectNewWord(true, data, 74, 33);
+            selectNewWord(true, data, result.score);
         })
         .fail(function (response) {
             const data = JSON.parse(response.responseText);
@@ -51,7 +51,6 @@ function newWord(arr) {
 
 function continueGame(userId, gameId) {
     $.get(`${http}continue/${userId}.${gameId}`, function (result) {
-
             let board = JSON.parse(result.board);
             board.forEach(x => {
                 if (x.value != '') {
@@ -60,11 +59,29 @@ function continueGame(userId, gameId) {
                     obj.innerHTML = `<div class = "success"><div class="letter wood">${letterObject.letter}<div class="letterValue">${letterObject.value}</div></div></div>`;
                 }
             });
-
+            showScore(result.score, 0);
             avaibleLetters = result.user_letters.split('');
             insertNewLetters(avaibleLetters);
         })
         .fail(function (response) {
             console.log(response);
         })
+}
+
+function exchangeLetters(userId, gameId, letters) {
+
+    let uriPar = encodeURIComponent(JSON.stringify({
+        userId: userId,
+        gameId: gameId,
+        letters: letters
+    }));
+    $.get(`${http}exchangeletters/${uriPar}`, function (result) {
+            avaibleLetters = result.newLetters.split('');
+            insertNewLetters(avaibleLetters);
+        })
+        .fail(function (result) {
+            const data = JSON.parse(result.responseText);
+            alert(data.msg);
+        })
+
 }

@@ -1,7 +1,5 @@
-var data = require('./data');
-var fields = require('./fields');
-// var options = require('./options.js');
-// var mysql = require('./mysql.js');
+const data = require('./data');
+const fields = require('./fields');
 
 class letterScore {
     constructor(field, letter, isNew = false) {
@@ -43,8 +41,9 @@ class letterScore {
 
 module.exports = class checkRules {
 
-    constructor(letters, board) {
+    constructor(letters, queryData) {
         this.currentLetters = [];
+        this.user_letters = queryData.user_letters;
         this.board = [];
         this.words = [];
         for (const letter in letters) {
@@ -54,7 +53,7 @@ module.exports = class checkRules {
             }
         }
 
-        board = JSON.parse(board);
+        let board = JSON.parse(queryData.board);
         let tempBoard = board.map(x => x.field);
 
         this.currentLetters.forEach(x => {
@@ -106,8 +105,8 @@ module.exports = class checkRules {
         }
     }
 
-    haveTheLettersChanged(user_letters) {
-        let dbLetters = user_letters.split('');
+    haveTheLettersChanged() {
+        let dbLetters = this.user_letters.split('');
         var BreakException = {};
         let found = true;
 
@@ -258,7 +257,7 @@ function getHorzWord(currentLetter, board, arr) {
                 if (arr.findIndex(x => x.field == id) < 0) {
                     fieldsHorz.push(new letterScore(id, fieldValue, false));
                 }
-                hasLettersOnEnds = true;
+                hasLettersOnSides = true;
                 element = id;
             }
         }
@@ -279,7 +278,7 @@ function getHorzWord(currentLetter, board, arr) {
                 if (arr.findIndex(x => x.field == id) < 0) {
                     fieldsHorz.push(new letterScore(id, fieldValue, false));
                 }
-                hasLettersOnEnds = true;
+                hasLettersOnSides = true;
                 element = id;
             }
         }

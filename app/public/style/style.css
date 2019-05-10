@@ -264,9 +264,10 @@ th {
 }
 
 .sideBar-pole:hover {
-  background-color: white;
   opacity: 0.5;
   cursor: default;
 }
 
-.changeLetters {}
+.checked {
+  opacity: 0.5;
+}

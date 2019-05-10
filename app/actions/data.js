@@ -58,6 +58,11 @@ module.exports = {
 var allLetters = [];
 
 const LetterValues = [{
+        letter: '*',
+        value: 0,
+        count: 2
+    },
+    {
         letter: 'A',
         value: 1,
         count: 9

@@ -1,47 +1,10 @@
 let lastSelectedID = "A1";
 let lastSelectedColor = "#E63462";
-let score = 0;
-let bonus = 1;
 let currentLetters = new Array();
 let avaibleLetters = new Array();
-
-
-// class letterScore {
-//     constructor(field, value, letter, isNew = true) {
-//         this.field = field;
-//         let obj = fieldsValues.find(x => x.field == field);
-//         this.letter = letter;
-//         if (isNew) {
-//             switch (obj.fieldClass) {
-//                 case 'tripleWord':
-//                     this.wordBonus = 3;
-//                     this.letterBonus = 1;
-//                     break;
-//                 case 'doubleWord':
-//                     this.wordBonus = 2;
-//                     this.letterBonus = 1;
-//                     break;
-//                 case 'tripleLetter':
-//                     this.wordBonus = 1;
-//                     this.letterBonus = 3;
-//                     break;
-//                 case 'doubleLetter':
-//                     this.wordBonus = 1;
-//                     this.letterBonus = 2;
-//                     break;
-//                 default:
-//                     this.wordBonus = 1;
-//                     this.letterBonus = 1;
-//             }
-//         } else {
-//             this.wordBonus = 1;
-//             this.letterBonus = 1;
-//         }
-
-//         this.value = this.letterBonus * value;
-//         this.isNew = isNew;
-//     }
-// }
+let allLetters;
+let fieldsValues;
+//TO DO: zmienic na const i wtedy promises, unikac zmiennych globalnych
 
 function selectField() {
     lostFocus();
@@ -49,6 +12,45 @@ function selectField() {
     obj.style.backgroundColor = 'white';
     obj.style.opacity = 0.5;
     lastSelectedID = this.id;
+}
+
+function disableSideBarLeters() {
+
+    let sidebarLetters = document.getElementsByClassName('sideBar-pole');
+    sidebarLetters = Array.from(sidebarLetters);
+
+    currentLetters.forEach(x => {
+        const itemIndex = sidebarLetters.findIndex(letter => {
+            return letter.querySelector('.letter').innerText.slice(0, 1) == x.letter;
+        });
+        const item = sidebarLetters[itemIndex];
+        item.style.backgroundColor = 'red';
+        item.style.opacity = 0.5;
+        sidebarLetters.splice(itemIndex, 1);
+    });
+
+    sidebarLetters.forEach(x => {
+        x.removeAttribute("style");
+    });
+}
+
+function exchangeLettersClick() {
+    let checkedLetters = document.getElementsByClassName('checked');
+    checkedLetters = Array.from(checkedLetters);
+    let letters = [];
+    checkedLetters.forEach(x => {
+        const letter = x.querySelector('.letter').innerText.slice(0, 1);
+        letters.push(letter);
+    });
+
+    exchangeLetters(1, 1243, letters);
+}
+
+function selectSideBarLetter(e) {
+    if (this.classList.contains('checked'))
+        this.classList.remove('checked');
+    else
+        this.classList.add('checked');
 }
 
 function lostFocus() {
@@ -84,7 +86,6 @@ function selectNewWord(isCorrectWord, data, score = 0, scoreBefore = 0) {
         }
 
         x.classList.remove('new');
-
         x.classList.add('cover');
 
         setTimeout(function () {
@@ -93,27 +94,12 @@ function selectNewWord(isCorrectWord, data, score = 0, scoreBefore = 0) {
         }, 600);
 
 
-        setTimeout(function () {
-            x.classList.remove('uncover');
-        }, 1200);
+        // setTimeout(function () {
+        //     x.classList.remove('uncover');
+        // }, 1200);
     });
     if (isCorrectWord) {
-        let obj = document.getElementsByClassName('timer')[0];
-        obj.setAttribute('data-from', obj.innerText);
-        obj.setAttribute('data-to', `${score}`);
-
-        let countData = {
-            from: scoreBefore,
-            to: score,
-            speed: 500,
-            refreshInterval: 30,
-            decimals: 0
-        };
-        setTimeout(function () {
-            $('.timer').countTo(countData);
-        }, 300);
-        currentLetters.length = 0;
-
+        showScore(score);
     } else {
         let temp = [];
         currentLetters.forEach(x => {
@@ -123,6 +109,26 @@ function selectNewWord(isCorrectWord, data, score = 0, scoreBefore = 0) {
         });
         currentLetters = Array.from(temp);
     }
+}
+
+function showScore(score, scoreBefore) {
+    let obj = document.getElementsByClassName('timer')[0];
+    if (!scoreBefore)
+        scoreBefore = new Number(obj.innerText);
+    obj.setAttribute('data-from', obj.innerText);
+    obj.setAttribute('data-to', `${score}`);
+
+    let countData = {
+        from: scoreBefore,
+        to: score,
+        speed: 500,
+        refreshInterval: 30,
+        decimals: 0
+    };
+    setTimeout(function () {
+        $('.timer').countTo(countData);
+    }, 300);
+    currentLetters.length = 0;
 }
 
 function insertNewLetters(newLetters) {
@@ -139,9 +145,14 @@ function insertNewLetters(newLetters) {
                 </div>
                 </th>`;
         }
-    })
-
+    });
     obj.innerHTML = html;
+
+    let sidebarLetters = document.getElementsByClassName('sideBar-pole');
+    sidebarLetters = Array.from(sidebarLetters);
+    sidebarLetters.forEach(x => {
+        x.addEventListener('click', selectSideBarLetter, false);
+    })
 }
 
 function checkPolishLetters(letter) {
@@ -181,9 +192,9 @@ function onStart() {
         element.addEventListener('click', selectField, false);
     });
 
-    //getLetters();
+    let element = document.getElementById('changeLetters');
+    element.addEventListener('click', exchangeLettersClick, false);
 }
-let allLetters;
-let fieldsValues;
+
 window.onload = onStart;
 window.addEventListener('keydown', keyDownEvent, false);

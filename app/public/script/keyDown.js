@@ -22,7 +22,7 @@ function keyDownEvent(e) {
             let fieldObj = fieldsValues.find(x => x.field == lastSelectedID);
             obj.innerText = fieldObj.text;
         }
-
+        disableSideBarLeters();
         lostFocus();
         return;
     }
@@ -76,7 +76,7 @@ function keyDownEvent(e) {
 }
 
 function addLetter(letter, e) {
-    let obj = document.getElementById(lastSelectedID);
+    const obj = document.getElementById(lastSelectedID);
     const regular = /^[A-Za-z]+$/;
     let index = currentLetters.findIndex(x => x.field == lastSelectedID);
 
@@ -95,18 +95,20 @@ function addLetter(letter, e) {
         if (shouldReturn)
             return;
 
-        let letterObject = allLetters.find(x => x.letter == letter);
-        let obj = document.getElementById(lastSelectedID);
-        obj.innerHTML = `<div class = "success"><div class="letter wood new">${letterObject.letter}<div class="letterValue">${letterObject.value}</div></div></div>`;
+        const letterObject = allLetters.find(x => x.letter == letter);
+        obj.innerHTML = `<div class = "success"><div class="letter wood">${letterObject.letter}<div class="letterValue">${letterObject.value}</div></div></div>`;
+
         let index = currentLetters.findIndex(x => x.field == lastSelectedID);
         if (index >= 0) {
             avaibleLetters.push(currentLetters[index].letter);
+            currentLetters[index].letter = letterObject.letter;
+        } else {
+            currentLetters.push({
+                field: lastSelectedID,
+                letter: letterObject.letter,
+                isNew: true
+            });
         }
-        currentLetters.push({
-            field: lastSelectedID,
-            letter: letterObject.letter,
-            isNew: true
-        });
-
+        disableSideBarLeters();
     }
 }
