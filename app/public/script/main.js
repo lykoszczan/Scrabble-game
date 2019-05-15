@@ -18,7 +18,7 @@ function generateNewWordUri() {
         });
     });
     const uriPar = encodeURIComponent(JSON.stringify(temp));
-    console.log(`${http}newword/${uriPar}`);
+    console.log(`/newword/${uriPar}`);
 }
 
 function addNewWord(response) {
@@ -213,8 +213,8 @@ function checkPolishLetters(letter) {
 }
 
 function onStart() {
-    getFields();
-    getAllLettersValues();
+    // getFields();
+    // getAllLettersValues();
     continueGame(1, 1243);
 
     let fields = document.getElementsByClassName("pole");

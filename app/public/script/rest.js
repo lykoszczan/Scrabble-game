@@ -51,16 +51,32 @@ function newWord(letters) {
 
 function continueGame(userId, gameId) {
     $.get(`${http}continue/${userId}.${gameId}`, function (result) {
-            let board = JSON.parse(result.board);
+            const board = JSON.parse(result.board);
+            const username = document.getElementById('username');
+            if (username && result.userName) {
+                username.innerText = result.userName;
+            }
+
+            allLetters = Array.from(result.allLetters);
+            fieldsValues = Array.from(result.allFields);
+            avaibleLetters = result.user_letters.split('');
+
+            fieldsValues.forEach(x => {
+                const obj = document.getElementById(x.field);
+                if (x.fieldClass) {
+                    obj.classList.add(x.fieldClass);
+                }
+                obj.innerText = x.text;
+            });
+
             board.forEach(x => {
                 if (x.value != '') {
                     let letterObject = allLetters.find(el => el.letter == x.value);
-                    let obj = document.getElementById(x.field);
+                    const obj = document.getElementById(x.field);
                     obj.innerHTML = `<div class = "success"><div class="letter wood">${letterObject.letter}<div class="letterValue">${letterObject.value}</div></div></div>`;
                 }
             });
             showScore(result.score, 0);
-            avaibleLetters = result.user_letters.split('');
             insertNewLetters(avaibleLetters);
         })
         .fail(function (response) {

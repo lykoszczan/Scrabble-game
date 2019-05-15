@@ -3,7 +3,8 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Rejestracja</title>
+    <title>Logowanie</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
     <style>
         .login-form {
             width: 300px;
@@ -42,13 +43,13 @@
 
 <body>
     <div class="login-form">
-        <h1>Zarejestruj się</h1>
-        <form action="signin" method="POST">
-            <input type="text" name="email" placeholder="Email" required>
+        <h1>Zaloguj się</h1>
+        <form action="login" method="POST">
             <input type="text" name="username" placeholder="Username" required>
             <input type="password" name="password" placeholder="Password" required>
             <input type="submit">
         </form>
+        <button type="button" class="btn btn-primary" onclick="location.href='signin'">Rejestracja</button>
     </div>
 </body>
 

@@ -1,19 +1,25 @@
 const express = require('express');
 const db = require('./../actions/db.js');
+const data = require('./../actions/data.js');
+const fields = require('./../actions/fields.js');
 const router = express.Router();
 
 router.get('/continue/:userId.:gameId', (req, res) => {
     let userId = JSON.parse(req.params.userId);
     let gameId = JSON.parse(req.params.gameId);
     let queryData;
-
-    let query = `SELECT * FROM games_history WHERE user_id = '${db.connection.escape(userId)}' AND game_id = '${db.connection.escape(gameId)}' ORDER BY round DESC LIMIT 1`;
+    const letters = data.getAllLetterValues();
+    const allFields = fields.getAllfields();
+    const query = `SELECT * FROM games_history WHERE user_id = '${db.connection.escape(userId)}' AND game_id = '${db.connection.escape(gameId)}' ORDER BY round DESC LIMIT 1`;
     db.query(query)
         .then(result => {
             queryData = JSON.parse(JSON.stringify(result[0]));
         })
         .then(result => {
             res.json({
+                userName: req.session.username,
+                allLetters: letters,
+                allFields: allFields,
                 score: queryData.user_score,
                 round: queryData.round,
                 board: queryData.board,
