@@ -5,7 +5,7 @@ const queryObject = require('./../actions/queryObject.js');
 const router = express.Router();
 
 router.post('/newword/:currentLetters', (req, res) => {
-
+    const io = req.app.get('socketio');
     let currentLetters = JSON.parse(req.params.currentLetters);
     let userId = 1;
     let gameId = 1243;
@@ -45,6 +45,12 @@ router.post('/newword/:currentLetters', (req, res) => {
                             query = `INSERT INTO games_history(game_id,time,user_id,user_score,round,board,user_letters,avaible_letters) 
 							VALUES('${qo.gameId}','${qo.time}',1,${score},${qo.round},'${JSON.stringify(board)}','${qo.newLetters}','${qo.bag}')`;
                             db.query(query).then(() => {
+                                io.emit('newword', JSON.stringify({
+                                    letters: currentLetters,
+                                    words: rules.words,
+                                    score: score
+                                }));
+
                                 res.json({
                                     data: JSON.stringify(rules.words),
                                     score: score,

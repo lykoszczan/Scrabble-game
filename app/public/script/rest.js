@@ -28,7 +28,7 @@ function newWord(letters) {
             letter: x.letter
         });
     });
-    let uriPar = encodeURIComponent(JSON.stringify(temp));
+    const uriPar = encodeURIComponent(JSON.stringify(temp));
     $.post(`${http}newword/${uriPar}`, function (result) {
             const data = JSON.parse(result.data);
             avaibleLetters = result.newLetters.split('');

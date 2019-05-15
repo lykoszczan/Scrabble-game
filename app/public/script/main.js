@@ -1,3 +1,6 @@
+const socket = io();
+socket.on('newword', addNewWord);
+
 let lastSelectedID = "A1";
 let lastSelectedColor = "#E63462";
 let currentLetters = new Array();
@@ -5,6 +8,33 @@ let avaibleLetters = new Array();
 let allLetters;
 let fieldsValues;
 //TO DO: zmienic na const i wtedy promises, unikac zmiennych globalnych
+
+function generateNewWordUri() {
+    let temp = [];
+    currentLetters.forEach(x => {
+        temp.push({
+            field: x.field,
+            letter: x.letter
+        });
+    });
+    const uriPar = encodeURIComponent(JSON.stringify(temp));
+    console.log(`${http}newword/${uriPar}`);
+}
+
+function addNewWord(response) {
+    response = JSON.parse(response);
+    console.log(response);
+
+    response.letters.forEach(x => {
+        const obj = document.getElementById(x.field);
+        const letterObject = allLetters.find(item => item.letter == x.letter);
+        obj.innerHTML = `<div class = "success"><div class="letter wood">${letterObject.letter}<div class="letterValue">${letterObject.value}</div></div></div>`;
+    });
+    setTimeout(() => {
+        selectNewWord(true, response.words, response.score);
+    }, 600);
+
+}
 
 function selectField() {
     lostFocus();

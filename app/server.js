@@ -5,7 +5,18 @@ const bodyParser = require('body-parser');
 const data = require('./actions/data.js');
 const fields = require('./actions/fields.js');
 const db = require('./actions/db.js');
+const http = require('http').createServer(app);
+const io = require('socket.io')(http);
 
+
+io.on('connection', (socket) => {
+	console.log('a user is connected');
+	socket.on('disconnect', function () {
+		console.log('user disconnected');
+	});
+})
+
+app.set('socketio', io);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
 	extended: false
@@ -62,6 +73,7 @@ app.use('/', newWord);
 app.use('/', continueGame);
 app.use('/', exchangeLetters);
 
+
 app.get('/letters', (req, res) => {
 	let count = req.query.count;
 	let letters = data.getLetters(count);
@@ -87,6 +99,6 @@ app.get('/allletters', (req, res) => {
 	});
 })
 
-let server = app.listen(52922, () => {
-	console.log('server is running on port1', server.address().port);
+http.listen(52922, () => {
+	console.log('server is running on port1', 52922);
 });
