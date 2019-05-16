@@ -14,6 +14,8 @@ router.post('/login', function (request, response) {
                     const responseData = results[0];
                     bcrypt.compare(password, responseData.password, function (err, res) {
                         if (res === true) {
+                            request.session.lastGameId = responseData.last_game_id;
+                            request.session.userId = responseData.id;
                             request.session.loggedin = true;
                             request.session.username = username;
                             response.redirect('/');

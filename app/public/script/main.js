@@ -215,7 +215,7 @@ function checkPolishLetters(letter) {
 function onStart() {
     // getFields();
     // getAllLettersValues();
-    continueGame(1, 1243);
+    continueGame();
 
     let fields = document.getElementsByClassName("pole");
     Array.from(fields).forEach(function (element) {

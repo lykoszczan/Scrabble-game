@@ -20,6 +20,15 @@ function getFields() {
     });
 }
 
+function newGame() {
+    $.post(`${http}newgame`, function (result) {
+            console.log(result);
+        })
+        .fail(function (result) {
+
+        });
+}
+
 function newWord(letters) {
     let temp = [];
     letters.forEach(x => {
@@ -49,14 +58,17 @@ function newWord(letters) {
         });
 }
 
-function continueGame(userId, gameId) {
-    $.get(`${http}continue/${userId}.${gameId}`, function (result) {
+function continueGame(gameId = '') {
+    $.get(`${http}continue/${gameId}`, function (result) {
             const board = JSON.parse(result.board);
             const username = document.getElementById('username');
             if (username && result.userName) {
                 username.innerText = result.userName;
             }
-
+            const opponentname = document.getElementById('opponentname');
+            if (opponentname && result.opponentName) {
+                opponentname.innerText = result.opponentName;
+            }
             allLetters = Array.from(result.allLetters);
             fieldsValues = Array.from(result.allFields);
             avaibleLetters = result.user_letters.split('');
@@ -76,7 +88,7 @@ function continueGame(userId, gameId) {
                     obj.innerHTML = `<div class = "success"><div class="letter wood">${letterObject.letter}<div class="letterValue">${letterObject.value}</div></div></div>`;
                 }
             });
-            showScore(result.score, 0);
+            showScore(result.userScore, 0);
             insertNewLetters(avaibleLetters);
         })
         .fail(function (response) {

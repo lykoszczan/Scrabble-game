@@ -1,6 +1,5 @@
 const express = require('express');
 const session = require('express-session');
-const moment = require('moment');
 const path = require('path');
 const app = express();
 const bodyParser = require('body-parser');
@@ -41,51 +40,18 @@ app.use(function (req, res, next) {
 	next();
 });
 
-app.post('/newgame', (req, res) => {
-
-	let bag = data.getAllPossibleLetters();
-	let board = fields.getfieldsLight();
-	let time = moment().format("YYYY-MM-DD HH:mm:ss");
-	let obj, letters, gameId;
-
-	let query = `INSERT INTO games(user1_id, user2_id) VALUES(1,2)`;
-
-	db.query(query)
-		.then(result => {
-			obj = data.getRandomLetters(bag);
-			bag = obj.bag;
-			letters = obj.letters.join("");
-			gameId = result.insertId;
-			query = `INSERT INTO games_history(game_id,time,user_id,user_score,round,board,user_letters,avaible_letters) 
-				VALUES('${gameId}','${time}',1,0,0,'${JSON.stringify(board)}','${letters}','${bag}')`;
-			db.query(query);
-		})
-		.then(result => {
-			// obj = data.getRandomLetters(bag);
-			// bag = obj.bag;
-			// letters = obj.letters.join("");
-			// query = `INSERT INTO games_history(game_id,time,user_id,user_score,round,board,user_letters,avaible_letters) 
-			// VALUES('${gameId}','${time}',2,0,0,'${JSON.stringify(board)}','${letters}','${bag}')`;
-			// db.query(query);
-		})
-		.then(() => {
-			res.json({
-				board: board
-			});
-		});
-});
-
-
 const newWord = require('./routes/newWord.js');
 const continueGame = require('./routes/continueGame.js');
 const exchangeLetters = require('./routes/exchangeLetters.js');
 const signin = require('./routes/signin.js');
 const login = require('./routes/login.js');
+const newgame = require('./routes/newgame.js')
 app.use('/', newWord);
 app.use('/', continueGame);
 app.use('/', exchangeLetters);
 app.use('/', signin);
 app.use('/', login);
+app.use('/', newgame);
 
 app.get('/fields', (req, res) => {
 	let str = fields.getAllfields();

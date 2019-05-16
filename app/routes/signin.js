@@ -14,6 +14,7 @@ router.post('/signin', (request, response) => {
             db.query('INSERT INTO users(username,password,email) VALUES(?,?,?)', [username, hash, email])
                 .then((results) => {
                     if (results.insertId) {
+                        request.session.userId = results.insertId;
                         request.session.loggedin = true;
                         request.session.username = username;
                         response.redirect('/');
