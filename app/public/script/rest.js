@@ -59,7 +59,9 @@ function newWord(letters) {
 }
 
 function continueGame(gameId = '') {
-    $.get(`${http}continue/${gameId}`, function (result) {
+    $.get(`${http}continue/`, {
+            gameId: gameId
+        }, function (result) {
             const board = JSON.parse(result.board);
             const username = document.getElementById('username');
             if (username && result.userName) {

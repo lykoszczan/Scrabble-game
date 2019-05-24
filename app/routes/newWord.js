@@ -7,12 +7,11 @@ const router = express.Router();
 router.post('/newword/:currentLetters', (req, res) => {
     const io = req.app.get('socketio');
     let currentLetters = JSON.parse(req.params.currentLetters);
-    let userId = 1;
-    let gameId = 1243;
+    let userId = req.session.userId;
+    let gameId = req.session.lastGameId;
     let queryData, board, rules, queryResult;
 
-    let query = `SELECT * FROM games_history WHERE user_id = '${db.connection.escape(userId)}' AND game_id = '${db.connection.escape(gameId)}' ORDER BY round DESC LIMIT 1`;
-    db.query(query)
+    db.query('SELECT * FROM games_history WHERE user_id = ? AND game_id = ? ORDER BY round DESC LIMIT 1', [userId, gameId])
         .then(result => {
             queryResult = result;
             queryData = JSON.parse(JSON.stringify(queryResult[0]));

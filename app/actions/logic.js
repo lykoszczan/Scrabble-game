@@ -44,6 +44,7 @@ module.exports = class checkRules {
     constructor(letters, queryData) {
         this.currentLetters = [];
         this.user_letters = queryData.user_letters;
+        this.isFirsMove = (queryData.round === 0);
         this.board = [];
         this.words = [];
         for (const letter in letters) {
@@ -142,6 +143,12 @@ module.exports = class checkRules {
     }
 
     getPossibleWords() {
+        if (this.currentLetters.length == 0) {
+            throw {
+                msg: "Brak liter!"
+            };
+        }
+
         this.currentLetters.sort(function (a, b) {
             return a.field.length - b.field.length ||
                 a.field.localeCompare(b.field);
@@ -149,16 +156,34 @@ module.exports = class checkRules {
 
         let possibleWords = [];
 
-        this.currentLetters.forEach(x => {
-            let wordHorz = getHorzWord(x, this.board, this.currentLetters);
-            if (wordHorz.word.length > 0 && possibleWords.findIndex(x => x.fields == wordHorz.fields) < 0) {
-                possibleWords.push(wordHorz);
-            }
-            let wordVert = getVertWord(x, this.board, this.currentLetters);
-            if (wordVert.word.length > 0 && possibleWords.findIndex(x => x.fields == wordVert.fields) < 0) {
-                possibleWords.push(wordVert);
-            }
-        });
+        if (this.isFirsMove) {
+            let wordScore = 0;
+            let wordBonus = 1;
+
+            this.currentLetters.forEach(x => {
+                wordScore += x.value * x.letterBonus;
+                wordBonus *= x.wordBonus;
+            });
+
+            wordScore = wordScore * wordBonus;
+
+            possibleWords.push({
+                word: this.currentLetters.map(e => e.letter).join(""),
+                fields: this.currentLetters.map(e => e.field).join(","),
+                score: wordScore
+            });
+        } else {
+            this.currentLetters.forEach(x => {
+                let wordHorz = getHorzWord(x, this.board, this.currentLetters);
+                if (wordHorz.word.length > 0 && possibleWords.findIndex(x => x.fields == wordHorz.fields) < 0) {
+                    possibleWords.push(wordHorz);
+                }
+                let wordVert = getVertWord(x, this.board, this.currentLetters);
+                if (wordVert.word.length > 0 && possibleWords.findIndex(x => x.fields == wordVert.fields) < 0) {
+                    possibleWords.push(wordVert);
+                }
+            });
+        }
         this.score = possibleWords.sum("score");
         this.words = Array.from(possibleWords);
     }

@@ -6,9 +6,9 @@ const router = express.Router();
 
 router.get('/continue', (req, res) => {
     //co w przypadku kiedy user dopiero sie zarejestruje
-    if (req.query.gameId !== undefined || req.session.lastGameId !== undefined) {
+    if (req.query.gameId !== "" || req.session.lastGameId !== undefined) {
         let gameId;
-        (req.query.gameId !== undefined) ? gameId = req.query.gameId: gameId = req.session.lastGameId;
+        (req.query.gameId !== "") ? gameId = req.query.gameId: gameId = req.session.lastGameId;
 
         let queryData, opponentId, opponentName;
         const letters = data.getAllLetterValues();

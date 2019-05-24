@@ -14,7 +14,6 @@ router.post('/newgame', (req, res) => {
     let gameId, obj, letters, opponentId;
     db.query(`SELECT users.username, games.user1_id, games.game_id FROM users INNER JOIN games ON users.id = games.user1_id 
     WHERE games.user2_id IS NULL AND games.user1_id <> ? ORDER BY games.game_id ASC LIMIT 1`, [userId])
-        // db.query('SELECT * FROM games WHERE user2_id IS NULL AND user1_id <> ? ORDER BY game_id ASC LIMIT 1', [userId])
         .then(result => {
             if (result.length > 0) {
                 gameId = result[0].game_id;
@@ -25,14 +24,16 @@ router.post('/newgame', (req, res) => {
                         obj = data.getRandomLetters(bag);
                         bag = obj.bag;
                         letters = obj.letters.join("");
-                        db.query(`INSERT INTO games_history(game_id,time,user_id,user_score,round,board,user_letters,avaible_letters) 
-                        VALUES(?,?,?,?,?,?,?,?)`, [gameId, time, opponentId, 0, 0, JSON.stringify(board), letters, bag])
+                        let query = `INSERT INTO games_history(game_id,time,user_id,user_score,round,board,user_letters,avaible_letters) 
+                         			VALUES('${gameId}','${time}',${opponentId},0,0,'${JSON.stringify(board)}','${letters}','${bag}')`;
+                        db.query(query)
                             .then(result => {
                                 obj = data.getRandomLetters(bag);
                                 bag = obj.bag;
                                 letters = obj.letters.join("");
-                                db.query(`INSERT INTO games_history(game_id,time,user_id,user_score,round,board,user_letters,avaible_letters) 
-                            VALUES(?,?,?,?,?,?,?,?)`, [gameId, time, userId, 0, 0, JSON.stringify(board), letters, bag])
+                                let query = `INSERT INTO games_history(game_id,time,user_id,user_score,round,board,user_letters,avaible_letters) 
+                                VALUES('${gameId}','${time}',${userId},0,0,'${JSON.stringify(board)}','${letters}','${bag}')`;
+                                db.query(query)
                                     .then(result => {
                                         res.json({
                                             userName: req.session.username,
