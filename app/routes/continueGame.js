@@ -7,7 +7,7 @@ const router = express.Router();
 router.get('/continue', (req, res) => {
     //co w przypadku kiedy user dopiero sie zarejestruje
     if (req.query.gameId !== "" || req.session.lastGameId !== undefined) {
-        let gameId;
+        let gameId, starts;
         (req.query.gameId !== "") ? gameId = req.query.gameId: gameId = req.session.lastGameId;
 
         let queryData, opponentId, opponentName;
@@ -17,6 +17,7 @@ router.get('/continue', (req, res) => {
             .then(result => {
                 if (result.length > 0) {
                     queryData = JSON.parse(JSON.stringify(result[0]));
+                    starts = queryData.user1_id;
                     (queryData.user1_id == req.session.userId) ? opponentId = queryData.user2_id: opponentId = queryData.user1_id;
                     db.query('SELECT * FROM users WHERE id = ?', [opponentId])
                         .then(result => {
@@ -27,6 +28,14 @@ router.get('/continue', (req, res) => {
                                     if (result.length > 0) {
                                         const lastUserMove = result.find(x => x.user_id == req.session.userId);
                                         const lastOpponentMove = result.find(x => x.user_id == opponentId);
+                                        let lastBoard;
+                                        if (result[0].round === result[1].round) {
+                                            const userStarts = result.find(x => x.user_id == starts);
+                                            lastBoard = userStarts.board;
+                                        } else {
+                                            lastBoard = result[0].board;
+                                        }
+
                                         req.session.gameId = gameId;
                                         res.json({
                                             userName: req.session.username,
@@ -34,9 +43,9 @@ router.get('/continue', (req, res) => {
                                             allLetters: letters,
                                             allFields: allFields,
                                             userScore: lastUserMove.user_score,
-                                            opponentScore: 0,
+                                            opponentScore: lastOpponentMove.user_score,
                                             round: lastUserMove.round,
-                                            board: lastUserMove.board,
+                                            board: lastBoard,
                                             user_letters: lastUserMove.user_letters,
                                             bag: lastUserMove.avaible_letters
                                         })

@@ -9,15 +9,17 @@ router.post('/newword/:currentLetters', (req, res) => {
     let currentLetters = JSON.parse(req.params.currentLetters);
     let userId = req.session.userId;
     let gameId = req.session.lastGameId;
-    let queryData, board, rules, queryResult;
+    let queryData, board;
 
-    db.query('SELECT * FROM games_history WHERE user_id = ? AND game_id = ? ORDER BY round DESC LIMIT 1', [userId, gameId])
+    db.query('SELECT * FROM games_history WHERE game_id = ? ORDER BY round DESC', [gameId])
         .then(result => {
-            queryResult = result;
-            queryData = JSON.parse(JSON.stringify(queryResult[0]));
-        })
-        .then(() => {
-            rules = new logic(currentLetters, queryData);
+            const lastUserMove = result.find(x => x.user_id == userId);
+            const lastOpponentMove = result.find(x => x.user_id != userId);
+            queryData = JSON.parse(JSON.stringify(lastUserMove));
+            queryData.board = lastOpponentMove.board;
+            queryData.round = lastOpponentMove.round;
+
+            const rules = new logic(currentLetters, queryData);
             if (queryData.round === 0) {
                 rules.isStartFieldFilled();
             }
@@ -42,7 +44,7 @@ router.post('/newword/:currentLetters', (req, res) => {
                             let qo = new queryObject(queryData, currentLetters);
                             const score = qo.scoreBefore + rules.score;
                             query = `INSERT INTO games_history(game_id,time,user_id,user_score,round,board,user_letters,avaible_letters) 
-							VALUES('${qo.gameId}','${qo.time}',1,${score},${qo.round},'${JSON.stringify(board)}','${qo.newLetters}','${qo.bag}')`;
+							VALUES('${qo.gameId}','${qo.time}','${userId}',${score},${qo.round},'${JSON.stringify(board)}','${qo.newLetters}','${qo.bag}')`;
                             db.query(query).then(() => {
                                 io.emit('newword', JSON.stringify({
                                     letters: currentLetters,

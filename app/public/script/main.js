@@ -24,7 +24,7 @@ function generateNewWordUri() {
 function addNewWord(response) {
     response = JSON.parse(response);
     console.log(response);
-
+    alert("nowe slowo");
     response.letters.forEach(x => {
         const obj = document.getElementById(x.field);
         const letterObject = allLetters.find(item => item.letter == x.letter);
@@ -32,6 +32,7 @@ function addNewWord(response) {
     });
     setTimeout(() => {
         selectNewWord(true, response.words, response.score);
+        showScoreOpponent(response.score);
     }, 600);
 
 }
@@ -128,9 +129,7 @@ function selectNewWord(isCorrectWord, data, score = 0, scoreBefore = 0) {
         //     x.classList.remove('uncover');
         // }, 1200);
     });
-    if (isCorrectWord) {
-        showScore(score);
-    } else {
+    if (!isCorrectWord) {
         let temp = [];
         currentLetters.forEach(x => {
             if (x.isNew) {
@@ -141,8 +140,8 @@ function selectNewWord(isCorrectWord, data, score = 0, scoreBefore = 0) {
     }
 }
 
-function showScore(score, scoreBefore) {
-    let obj = document.getElementsByClassName('timer')[0];
+function showScoreOpponent(score, scoreBefore) {
+    const obj = document.getElementById('opponentScore');
     if (!scoreBefore)
         scoreBefore = new Number(obj.innerText);
     obj.setAttribute('data-from', obj.innerText);
@@ -156,7 +155,26 @@ function showScore(score, scoreBefore) {
         decimals: 0
     };
     setTimeout(function () {
-        $('.timer').countTo(countData);
+        $('.opponentTimer').countTo(countData);
+    }, 300);
+}
+
+function showScore(score, scoreBefore) {
+    let obj = document.getElementById('userScore');
+    if (!scoreBefore)
+        scoreBefore = new Number(obj.innerText);
+    obj.setAttribute('data-from', obj.innerText);
+    obj.setAttribute('data-to', `${score}`);
+
+    let countData = {
+        from: scoreBefore,
+        to: score,
+        speed: 500,
+        refreshInterval: 30,
+        decimals: 0
+    };
+    setTimeout(function () {
+        $('.userTimer').countTo(countData);
     }, 300);
     currentLetters.length = 0;
 }

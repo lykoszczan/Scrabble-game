@@ -9,6 +9,7 @@ const db = require('./actions/db.js');
 const http = require('http').createServer(app);
 const favicon = require('serve-favicon');
 const io = require('socket.io')(http);
+const port = process.env.PORT || 52922;
 
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
@@ -45,12 +46,14 @@ const continueGame = require('./routes/continueGame.js');
 const exchangeLetters = require('./routes/exchangeLetters.js');
 const signin = require('./routes/signin.js');
 const login = require('./routes/login.js');
+const logout = require('./routes/logout.js');
 const newgame = require('./routes/newgame.js')
 app.use('/', newWord);
 app.use('/', continueGame);
 app.use('/', exchangeLetters);
 app.use('/', signin);
 app.use('/', login);
+app.use('/', logout);
 app.use('/', newgame);
 
 app.get('/fields', (req, res) => {
@@ -74,6 +77,8 @@ app.get('/', function (request, response) {
 	}
 });
 
+
+
 http.listen(52922, () => {
-	console.log('server is running on port1', 52922);
+	console.log('server is running on port1', port);
 });

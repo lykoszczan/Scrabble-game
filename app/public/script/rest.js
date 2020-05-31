@@ -43,6 +43,7 @@ function newWord(letters) {
             avaibleLetters = result.newLetters.split('');
             insertNewLetters(avaibleLetters);
             selectNewWord(true, data, result.score);
+            showScore(result.score);
         })
         .fail(function (response) {
             const data = JSON.parse(response.responseText);
@@ -91,6 +92,7 @@ function continueGame(gameId = '') {
                 }
             });
             showScore(result.userScore, 0);
+            showScoreOpponent(result.opponentScore, 0);
             insertNewLetters(avaibleLetters);
         })
         .fail(function (response) {
