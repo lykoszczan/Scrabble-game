@@ -4,7 +4,7 @@
   "description": "Aplikacja do gry w Scrabble",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "author": "Marcin Lykowski",
   "license": "ISC",
