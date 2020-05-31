@@ -31,5 +31,5 @@ jobs:
       with:
         app-name: 'scrabblebylykoszcan'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_d62575eb01c743bb8fbfde74a50d0ef3 }}
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_d2b76242b7324e7384c5783bbc1b053c }}
         package: .
